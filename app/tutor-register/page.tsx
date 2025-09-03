@@ -27,7 +27,6 @@ export default function TutorRegisterPage() {
     setError("")
     setSuccess("")
 
-    // Basic validation
     if (!formData.first_name || !formData.last_name || !formData.email || !formData.phone || !formData.password) {
       setError("All fields are required")
       setIsLoading(false)
@@ -35,7 +34,7 @@ export default function TutorRegisterPage() {
     }
 
     try {
-      const response = await fetch("https://yourdomain.com/api/tutor-register.php", {
+      const response = await fetch("https://easystudy-platform.vercel.app/api/tutor-register.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +60,6 @@ export default function TutorRegisterPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-primary" />

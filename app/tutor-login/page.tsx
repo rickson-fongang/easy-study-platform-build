@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,11 +9,13 @@ import { Label } from "@/components/ui/label"
 import { BookOpen, Eye, EyeOff, Shield, Loader2, AlertCircle } from "lucide-react"
 
 export default function TutorLoginPage() {
-  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const [formData, setFormData] = useState({ email: "", password: "" })
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,36 +29,29 @@ export default function TutorLoginPage() {
     }
 
     try {
-      const response = await fetch(
-        "https://easystudy-platform.vercel.app/api/auth/login.php",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            user_type: "tutor"
-          }),
-        }
-      )
+      const response = await fetch("https://easystudy-platform.vercel.app/api/login.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData, user_type: "tutor" }), // ensure we specify tutor
+      })
 
-      const result = await response.json()
-      setIsLoading(false)
+      const data = await response.json()
 
-      if (response.ok && result.success) {
-        localStorage.setItem("token", result.token)
-        localStorage.setItem("user", JSON.stringify(result.user))
-
-        // Redirect to tutor dashboard
-        router.push("/tutor/dashboard")
+      if (data.success) {
+        // You can store token in localStorage or cookie
+        localStorage.setItem("token", data.token)
+        // Redirect tutor to dashboard
+        window.location.href = "/tutor-dashboard"
       } else {
-        setError(result.message || "Login failed")
+        setError(data.message || "Login failed.")
       }
     } catch (err) {
-      console.error(err)
-      setIsLoading(false)
-      setError("Network error. Please try again.")
+      setError("Something went wrong. Please try again.")
     }
+
+    setIsLoading(false)
   }
 
   return (
@@ -68,7 +62,7 @@ export default function TutorLoginPage() {
             <BookOpen className="h-8 w-8 text-primary" />
             <span className="text-2xl font-bold text-foreground">EasyStudy</span>
           </Link>
-          <p className="text-sm text-muted-foreground mt-2">With Rickson Fongang</p>
+          <p className="text-sm text-muted-foreground mt-2">Tutor Login</p>
         </div>
 
         <Card>
@@ -77,7 +71,7 @@ export default function TutorLoginPage() {
               <Shield className="h-12 w-12 text-primary" />
             </div>
             <CardTitle className="text-2xl">Tutor Portal</CardTitle>
-            <CardDescription>Access your tutor dashboard to manage students and content</CardDescription>
+            <CardDescription>Access your dashboard to manage students and content</CardDescription>
           </CardHeader>
           <CardContent>
             {error && (
@@ -89,11 +83,11 @@ export default function TutorLoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Tutor Email</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your tutor email"
+                  placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
@@ -127,25 +121,19 @@ export default function TutorLoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing In...
+                    Logging In...
                   </>
                 ) : (
-                  "Sign In"
+                  "Login as Tutor"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Don't have a tutor account?{" "}
+                Don't have an account?{" "}
                 <Link href="/tutor-register" className="text-primary hover:underline">
                   Register here
-                </Link>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Are you a student?{" "}
-                <Link href="/login" className="text-primary hover:underline">
-                  Student Login
                 </Link>
               </p>
             </div>
