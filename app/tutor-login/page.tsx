@@ -1,9 +1,8 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,39 +10,59 @@ import { Label } from "@/components/ui/label"
 import { BookOpen, Eye, EyeOff, Shield, Loader2, AlertCircle } from "lucide-react"
 
 export default function TutorLoginPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
+  const [formData, setFormData] = useState({ email: "", password: "" })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
 
-    // Basic validation
     if (!formData.email || !formData.password) {
       setError("Please fill in all fields")
       setIsLoading(false)
       return
     }
 
-    // Simulate admin login process
-    setTimeout(() => {
+    try {
+      const response = await fetch(
+        "https://easystudy-platform.vercel.app/api/auth/login.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            user_type: "tutor"
+          }),
+        }
+      )
+
+      const result = await response.json()
       setIsLoading(false)
-      // TODO: Implement actual tutor login logic
-      console.log("Tutor login attempt:", formData)
-      // Redirect to admin dashboard on success
-    }, 1500)
+
+      if (response.ok && result.success) {
+        localStorage.setItem("token", result.token)
+        localStorage.setItem("user", JSON.stringify(result.user))
+
+        // Redirect to tutor dashboard
+        router.push("/tutor/dashboard")
+      } else {
+        setError(result.message || "Login failed")
+      }
+    } catch (err) {
+      console.error(err)
+      setIsLoading(false)
+      setError("Network error. Please try again.")
+    }
   }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-primary" />
@@ -58,7 +77,7 @@ export default function TutorLoginPage() {
               <Shield className="h-12 w-12 text-primary" />
             </div>
             <CardTitle className="text-2xl">Tutor Portal</CardTitle>
-            <CardDescription>Access your admin dashboard to manage students and content</CardDescription>
+            <CardDescription>Access your tutor dashboard to manage students and content</CardDescription>
           </CardHeader>
           <CardContent>
             {error && (
@@ -70,11 +89,11 @@ export default function TutorLoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Admin Email</Label>
+                <Label htmlFor="email">Tutor Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your admin email"
+                  placeholder="Enter your tutor email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
@@ -82,12 +101,12 @@ export default function TutorLoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Admin Password</Label>
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your admin password"
+                    placeholder="Enter your password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
@@ -99,11 +118,7 @@ export default function TutorLoginPage() {
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
                   </Button>
                 </div>
               </div>
@@ -112,15 +127,21 @@ export default function TutorLoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Accessing Dashboard...
+                    Signing In...
                   </>
                 ) : (
-                  "Access Admin Dashboard"
+                  "Sign In"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don't have a tutor account?{" "}
+                <Link href="/tutor-register" className="text-primary hover:underline">
+                  Register here
+                </Link>
+              </p>
               <p className="text-sm text-muted-foreground">
                 Are you a student?{" "}
                 <Link href="/login" className="text-primary hover:underline">
