@@ -7,7 +7,6 @@ require_once '../classes/Auth.php';
 $data = json_decode(file_get_contents("php://input"));
 
 if (!empty($data->email) && !empty($data->password)) {
-
     $database = new Database();
     $db = $database->getConnection();
     $user = new User($db);
@@ -33,7 +32,12 @@ if (!empty($data->email) && !empty($data->password)) {
                 $token = Auth::generateToken($user_data);
 
                 http_response_code(200);
-                echo json_encode(['success' => true, 'message' => 'Tutor login successful', 'token' => $token, 'user' => $user_data]);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Tutor login successful',
+                    'token' => $token,
+                    'user' => $user_data
+                ]);
                 exit;
             } else {
                 http_response_code(401);

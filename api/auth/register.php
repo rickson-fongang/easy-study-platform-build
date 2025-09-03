@@ -4,12 +4,9 @@ require_once '../config/database.php';
 require_once '../classes/User.php';
 require_once '../classes/Auth.php';
 
-// Get posted data
 $data = json_decode(file_get_contents("php://input"));
 
-// Check required fields
 if (!empty($data->first_name) && !empty($data->last_name) && !empty($data->email) && !empty($data->password)) {
-
     $database = new Database();
     $db = $database->getConnection();
     $user = new User($db);
@@ -25,17 +22,14 @@ if (!empty($data->first_name) && !empty($data->last_name) && !empty($data->email
     }
 
     // Hash password
-    $hashedPassword = password_hash($data->password, PASSWORD_BCRYPT);
-
-    // Set user properties
     $user->first_name = $data->first_name;
     $user->last_name = $data->last_name;
     $user->email = $data->email;
-    $user->password = $hashedPassword;
+    $user->password = password_hash($data->password, PASSWORD_BCRYPT);
     $user->user_type = 'tutor';
     $user->is_active = true;
 
-    if ($user->create()) { // Make sure your User class has create() method
+    if ($user->create()) {
         http_response_code(201);
         echo json_encode([
             'success' => true,
