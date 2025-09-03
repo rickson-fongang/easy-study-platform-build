@@ -102,7 +102,7 @@ easystudy-platform/
    \`\`\`
 
 3. **Configure CORS**:
-   ```apache
+   \`\`\`apache
    # Add to .htaccess in api/ folder
    Header always set Access-Control-Allow-Origin "https://your-netlify-site.netlify.app"
    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
