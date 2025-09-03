@@ -7,75 +7,83 @@ require_once '../classes/Auth.php';
 // Get posted data
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->email) && !empty($data->password) && !empty($data->user_type)) {
-    
-    // Initialize database and user object
+// Check required fields
+if (!empty($data->email) && !empty($data->password)) {
+
     $database = new Database();
     $db = $database->getConnection();
     $user = new User($db);
 
-    // Set user properties
-    $user->email = $data->email;
-
-    // Check if email exists
-    if ($user->emailExists()) {
+    // Load user by email
+    if ($user->loadByEmail($data->email)) { // Assuming User class has loadByEmail method
         
-        // Verify password and user type
-        if (password_verify($data->password, $user->password) && $user->user_type === $data->user_type) {
-            
-            // Check if user is active
+        // Make sure user is a tutor
+        if ($user->user_type !== 'tutor') {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'message' => 'This login is only for tutors.'
+            ]);
+            exit;
+        }
+
+        // Verify password
+        if (password_verify($data->password, $user->password)) {
+
+            // Check if active
             if ($user->is_active) {
-                
-                // Generate JWT token
                 $user_data = [
                     'id' => $user->id,
                     'email' => $user->email,
-                    'user_type' => $user->user_type
+                    'user_type' => $user->user_type,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name
                 ];
-                
+
                 $token = Auth::generateToken($user_data);
 
-                // Set response code and return user data
                 http_response_code(200);
                 echo json_encode([
                     'success' => true,
-                    'message' => 'Login successful',
+                    'message' => 'Tutor login successful',
                     'token' => $token,
-                    'user' => [
-                        'id' => $user->id,
-                        'first_name' => $user->first_name,
-                        'last_name' => $user->last_name,
-                        'email' => $user->email,
-                        'phone' => $user->phone,
-                        'user_type' => $user->user_type
-                    ]
+                    'user' => $user_data
                 ]);
+                exit;
+
             } else {
                 http_response_code(401);
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Account is deactivated. Please contact administrator.'
+                    'message' => 'Account is deactivated. Please contact admin.'
                 ]);
+                exit;
             }
+
         } else {
             http_response_code(401);
             echo json_encode([
                 'success' => false,
-                'message' => 'Invalid credentials or user type.'
+                'message' => 'Incorrect password.'
             ]);
+            exit;
         }
+
     } else {
-        http_response_code(401);
+        http_response_code(404);
         echo json_encode([
             'success' => false,
-            'message' => 'User not found.'
+            'message' => 'Tutor not found.'
         ]);
+        exit;
     }
+
 } else {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Email, password, and user type are required.'
+        'message' => 'Email and password are required.'
     ]);
+    exit;
 }
 ?>
