@@ -2,50 +2,53 @@
 require_once '../config/config.php';
 require_once '../config/database.php';
 require_once '../classes/User.php';
+require_once '../classes/Auth.php';
 
 // Get posted data
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->first_name) && !empty($data->last_name) && 
-    !empty($data->email) && !empty($data->password) && !empty($data->phone)) {
-    
-    // Initialize database and user object
+// Check required fields
+if (!empty($data->first_name) && !empty($data->last_name) && !empty($data->email) && !empty($data->password)) {
+
     $database = new Database();
     $db = $database->getConnection();
     $user = new User($db);
+
+    // Check if email already exists
+    if ($user->loadByEmail($data->email)) {
+        http_response_code(409);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Email already registered.'
+        ]);
+        exit;
+    }
+
+    // Hash password
+    $hashedPassword = password_hash($data->password, PASSWORD_BCRYPT);
 
     // Set user properties
     $user->first_name = $data->first_name;
     $user->last_name = $data->last_name;
     $user->email = $data->email;
-    $user->phone = $data->phone;
-    $user->password = $data->password;
-    $user->user_type = isset($data->user_type) ? $data->user_type : 'student';
+    $user->password = $hashedPassword;
+    $user->user_type = 'tutor';
+    $user->is_active = true;
 
-    // Check if email already exists
-    if ($user->emailExists()) {
-        http_response_code(400);
+    if ($user->create()) { // Make sure your User class has create() method
+        http_response_code(201);
         echo json_encode([
-            'success' => false,
-            'message' => 'Email already exists.'
+            'success' => true,
+            'message' => 'Tutor registered successfully.'
         ]);
     } else {
-        // Create user
-        if ($user->create()) {
-            http_response_code(201);
-            echo json_encode([
-                'success' => true,
-                'message' => 'User registered successfully.',
-                'user_id' => $user->id
-            ]);
-        } else {
-            http_response_code(500);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Unable to register user.'
-            ]);
-        }
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to register tutor.'
+        ]);
     }
+
 } else {
     http_response_code(400);
     echo json_encode([

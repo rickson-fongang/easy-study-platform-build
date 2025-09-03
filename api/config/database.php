@@ -1,10 +1,10 @@
 <?php
 class Database {
-    private $host = "tramway.proxy.rlwy.net";
-    private $db_name = "railway"; // default Railway DB name
-    private $username = "root";
-    private $password = "ZHwqVHydwhBhKKKRUNWeLxzhvdywkmPn";
-    private $port = "42205"; // Railway MySQL port
+    private $host = "tramway.proxy.rlwy.net"; // Railway host
+    private $db_name = "railway"; // Railway database name
+    private $username = "root"; 
+    private $password = "ZHwqVHydwhBhKKKRUNWeLxzhvdywkmPn"; 
+    private $port = "42205"; // Railway port
     public $conn;
 
     public function getConnection() {
@@ -12,8 +12,8 @@ class Database {
 
         try {
             $this->conn = new PDO(
-                "mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name,
-                $this->username,
+                "mysql:host={$this->host};port={$this->port};dbname={$this->db_name}", 
+                $this->username, 
                 $this->password
             );
             $this->conn->exec("set names utf8");
