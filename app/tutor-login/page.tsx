@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
+
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,7 +18,6 @@ export default function TutorLoginPage() {
     email: "",
     password: "",
   })
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,21 +31,13 @@ export default function TutorLoginPage() {
       return
     }
 
-    // Hardcoded login check
-    if (
-      formData.email === "admin@easystudy.com" &&
-      formData.password === "1234"
-    ) {
-      setTimeout(() => {
-        setIsLoading(false)
-        router.push("/tutor-dashboard") // Redirect to tutor dashboard
-      }, 1000)
-    } else {
-      setTimeout(() => {
-        setIsLoading(false)
-        setError("Invalid email or password")
-      }, 1000)
-    }
+    // Simulate admin login process
+    setTimeout(() => {
+      setIsLoading(false)
+      // TODO: Implement actual tutor login logic
+      console.log("Tutor login attempt:", formData)
+      // Redirect to admin dashboard on success
+    }, 1500)
   }
 
   return (
