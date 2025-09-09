@@ -28,7 +28,7 @@ A comprehensive learning management system built with HTML, CSS, JavaScript (fro
 
 \`\`\`
 easystudy-platform/
-├── Frontend (Deploy to Netlify)
+├── Frontend
 │   ├── index.html                 # Landing page
 │   ├── login.html                 # Student login
 │   ├── register.html              # Student registration
