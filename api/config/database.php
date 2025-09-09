@@ -1,10 +1,11 @@
 <?php
 class Database {
-    private $host = "127.0.0.1"; 
-private $db_name = "easystudy_db"; 
-private $username = "root"; 
-private $password = ""; // (default is empty in XAMPP)
-
+    private $host = "tramway.proxy.rlwy.net"; // Railway host
+    private $db_name = "railway"; // Railway database name
+    private $username = "root"; 
+    private $password = "ZHwqVHydwhBhKKKRUNWeLxzhvdywkmPn"; 
+    private $port = "42205"; // Railway port
+    public $conn;
 
     public function getConnection() {
         $this->conn = null;

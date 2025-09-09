@@ -1,7 +1,9 @@
 // API Configuration for EasyStudy Platform
 const API_CONFIG = {
-  // Update this URL to your InfinityFree subdomain
-  BASE_URL: "https://your-subdomain.infinityfreeapp.com/api",
+  // Update this URL to your railway subdomain
+  BASE_URL: "https://easystudy-api-production.up.railway.app",
+  // Example: src/config.js
+
 
   // API Endpoints
   ENDPOINTS: {

@@ -121,7 +121,7 @@ export default function HomePage() {
         <div className="container mx-auto text-center">
           <h3 className="text-3xl font-bold text-foreground mb-6">Ready to Transform Your Learning?</h3>
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            Join thousands of students already learning with EasyStudy and experience the difference.
+            Join students already learning with EasyStudy and experience the difference.
           </p>
           <Link href="/register">
             <Button size="lg">Get Started Now</Button>
@@ -136,7 +136,7 @@ export default function HomePage() {
             <BookOpen className="h-6 w-6 text-primary" />
             <span className="text-lg font-semibold text-foreground">EasyStudy</span>
           </div>
-          <p className="text-muted-foreground">© 2024 EasyStudy with Rickson Fongang. All rights reserved.</p>
+          <p className="text-muted-foreground">© 2025 EasyStudy with Rickson Fongang. All rights reserved.</p>
         </div>
       </footer>
     </div>
