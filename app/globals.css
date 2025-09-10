@@ -206,3 +206,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* Force green colors */
+[class*="bg-primary"] { background-color: #059669 !important; }
+[class*="text-primary"] { color: #059669 !important; }
+[class*="bg-secondary"] { background-color: #10b981 !important; }
+[class*="text-secondary"] { color: #10b981 !important; }
+[class*="bg-accent"] { background-color: #34d399 !important; }
+[class*="text-accent"] { color: #34d399 !important; }
