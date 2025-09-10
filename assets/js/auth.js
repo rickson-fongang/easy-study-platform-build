@@ -45,8 +45,8 @@ class EasyStudyAuth {
 
         // ✅ React/Next.js routing
         const dashboardPath = response.user.user_type === "tutor" 
-          ? "/app/tutor/dashboard" 
-          : "/app/student/dashboard";
+          ? "/tutor/dashboard" 
+          : "/student/dashboard";
 
         window.location.href = dashboardPath;
       } else {
@@ -77,7 +77,7 @@ class EasyStudyAuth {
       if (response.success && response.user.user_type === "tutor") {
         localStorage.setItem("es_token", response.token);
         localStorage.setItem("es_user", JSON.stringify(response.user));
-        window.location.href = "/app/tutor/dashboard";
+        window.location.href = "/tutor/dashboard";
       } else {
         this.showError("loginError", response.message || "Tutor login failed");
       }
