@@ -29,7 +29,7 @@ export default function TutorLoginPage() {
     }
 
     try {
-      const response = await fetch("https://easystudy-platform.vercel.app/api/auth/login.php", {
+     const response = await fetch("https://easystudy-api-production.up.railway.app/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

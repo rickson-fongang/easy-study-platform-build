@@ -34,12 +34,15 @@ export default function TutorRegisterPage() {
     }
 
     try {
-      const response = await fetch("https://easystudy-platform.vercel.app/api/tutor-register.php", {
+      const response = await fetch("https://easystudy-api-production.up.railway.app/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+     body: JSON.stringify({
+  ...formData,
+  user_type: "tutor"  // ✅ Add this line
+}),
       })
 
       const data = await response.json()
