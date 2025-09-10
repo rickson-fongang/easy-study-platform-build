@@ -41,24 +41,22 @@ export default function TutorRegisterPage() {
         },
      body: JSON.stringify({
   ...formData,
-  user_type: "tutor"  // ✅ Add this line
+  user_type: "tutor"  
 }),
       })
 
       const data = await response.json()
-
-      if (data.success) {
-        setSuccess("Tutor registered successfully! You can now log in.")
-        setFormData({ first_name: "", last_name: "", email: "", phone: "", password: "" })
-      } else {
-        setError(data.message || "Registration failed.")
-      }
-    } catch (err) {
-      setError("Something went wrong. Please try again.")
-    }
-
-    setIsLoading(false)
-  }
+if (data.success) {
+  setSuccess("Tutor registered successfully! Redirecting to login...")
+  setFormData({ first_name: "", last_name: "", email: "", phone: "", password: "" })
+  
+  // Redirect to tutor login
+  setTimeout(() => {
+    window.location.href = "/tutor-login"
+  }, 2000)
+} else {
+  setError(data.message || "Registration failed.")
+}
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
