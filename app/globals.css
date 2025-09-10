@@ -206,7 +206,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/* Add these color utilities */
+/* Add these color utilities 
 .bg-primary { @apply bg-green-600; }
 .text-primary { @apply text-green-600; }
 .bg-secondary { @apply bg-green-500; }
