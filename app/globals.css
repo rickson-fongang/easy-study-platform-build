@@ -1,15 +1,15 @@
-@tailwind base;     /* ✅ USE v3 SYNTAX */
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;          /* ✅ HSL FORMAT FOR v3 */
+  --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 160 84% 39%;           /* Your green color */
+  --primary: 160 84% 39%;
   --primary-foreground: 0 0% 100%;
   --secondary: 160 76% 48%;
   --secondary-foreground: 0 0% 100%;
@@ -55,8 +55,6 @@
     @apply bg-background text-foreground;
   }
 }
-
-
 @import "tailwindcss";
 @import "tw-animate-css";
 
