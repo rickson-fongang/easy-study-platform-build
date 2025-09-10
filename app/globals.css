@@ -1,49 +1,58 @@
-/* ✅ ADD BROWSER COMPATIBILITY FIXES */
-@supports not (color: oklch(1 0 0)) {
-  :root {
-    /* Fallback colors for older browsers */
-    --background: #ffffff;
-    --foreground: #475569;
-    --card: #f1f5f9;
-    --card-foreground: #1f2937;
-    --popover: #ffffff;
-    --popover-foreground: #475569;
-    --primary: #059669;
-    --primary-foreground: #ffffff;
-    --secondary: #10b981;
-    --secondary-foreground: #ffffff;
-    --muted: #f1f5f9;
-    --muted-foreground: #6b7280;
-    --accent: #10b981;
-    --accent-foreground: #ffffff;
-    --destructive: #dc2626;
-    --destructive-foreground: #ffffff;
-    --border: #e5e7eb;
-    --input: #ffffff;
-    --ring: rgba(5, 150, 105, 0.5);
-    --radius: 0.5rem;
+@tailwind base;     /* ✅ USE v3 SYNTAX */
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;          /* ✅ HSL FORMAT FOR v3 */
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 160 84% 39%;           /* Your green color */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 160 76% 48%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 210 40% 98%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 160 76% 48%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 0 0% 100%;
+  --ring: 160 84% 39%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 160 76% 48%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 160 76% 48%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
   }
-  
-  .dark {
-    --background: #020817;
-    --foreground: #f8fafc;
-    --card: #020817;
-    --card-foreground: #f8fafc;
-    --popover: #020817;
-    --popover-foreground: #f8fafc;
-    --primary: #10b981;
-    --primary-foreground: #020817;
-    --secondary: #1e293b;
-    --secondary-foreground: #f8fafc;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --accent: #10b981;
-    --accent-foreground: #020817;
-    --destructive: #991b1b;
-    --destructive-foreground: #fecaca;
-    --border: #1e293b;
-    --input: #1e293b;
-    --ring: rgba(16, 185, 129, 0.5);
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
