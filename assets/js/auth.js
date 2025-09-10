@@ -110,7 +110,7 @@ class EasyStudyAuth {
       const response = await this.apiRequest(window.API_CONFIG.ENDPOINTS.REGISTER, userData);
       if (response.success) {
         alert("Registration successful! Redirecting to login...");
-        setTimeout(() => window.location.href = "/app/login", 2000);
+        setTimeout(() => window.location.href = "/login", 2000);
       } else {
         this.showError("registerError", response.message || "Registration failed");
       }
