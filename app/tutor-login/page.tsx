@@ -43,7 +43,7 @@ export default function TutorLoginPage() {
         // You can store token in localStorage or cookie
         localStorage.setItem("token", data.token)
         // Redirect tutor to dashboard
-        window.location.href = "/app/tutor/dashboard"
+        window.location.href = "/tutor/dashboard"
       } else {
         setError(data.message || "Login failed.")
       }

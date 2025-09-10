@@ -48,7 +48,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
       // Redirect to student dashboard
-      window.location.href = "/app/student/dashboard"
+      window.location.href = "/student/dashboard"
     } else {
       setError(data.message || "Login failed.")
     }
