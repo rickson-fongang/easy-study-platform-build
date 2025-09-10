@@ -128,7 +128,7 @@ export default function RegisterPage() {
     if (data.success) {
       // Success - redirect to login
       alert("Registration successful! Please login.")
-      window.location.href = "/app/login"
+      window.location.href = "/login"
     } else {
       setErrors({ general: data.message || "Registration failed." })
     }
