@@ -93,27 +93,51 @@ export default function RegisterPage() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+  e.preventDefault()
+  setIsLoading(true)
 
-    // Validate all fields
-    Object.keys(formData).forEach((key) => {
-      validateField(key, formData[key as keyof typeof formData])
+  // Validate all fields
+  Object.keys(formData).forEach((key) => {
+    validateField(key, formData[key as keyof typeof formData])
+  })
+
+  if (Object.keys(errors).length > 0) {
+    setIsLoading(false)
+    return
+  }
+
+  try {
+    const response = await fetch("https://easystudy-api-production.up.railway.app/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        first_name: formData.fullName.split(' ')[0],
+        last_name: formData.fullName.split(' ').slice(1).join(' ') || formData.fullName.split(' ')[0],
+        email: formData.email,
+        password: formData.password,
+        confirm_password: formData.confirmPassword,
+        admin_code: formData.adminCode,
+        user_type: "student"
+      }),
     })
 
-    if (Object.keys(errors).length > 0) {
-      setIsLoading(false)
-      return
-    }
+    const data = await response.json()
 
-    // Simulate registration process
-    setTimeout(() => {
-      setIsLoading(false)
-      // TODO: Implement actual registration logic
-      console.log("Registration successful:", formData)
-      // Show success message from Tehillah and redirect
-    }, 2000)
+    if (data.success) {
+      // Success - redirect to login
+      alert("Registration successful! Please login.")
+      window.location.href = "/app/login"
+    } else {
+      setErrors({ general: data.message || "Registration failed." })
+    }
+  } catch (err) {
+    setErrors({ general: "Something went wrong. Please try again." })
   }
+
+  setIsLoading(false)
+}
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">

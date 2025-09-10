@@ -19,26 +19,45 @@ export default function LoginPage() {
     password: "",
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsLoading(true)
+  setError("")
 
-    // Basic validation
-    if (!formData.email || !formData.password) {
-      setError("Please fill in all fields")
-      setIsLoading(false)
-      return
-    }
-
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false)
-      // TODO: Implement actual login logic
-      console.log("Login attempt:", formData)
-      // Redirect to student dashboard on success
-    }, 1500)
+  if (!formData.email || !formData.password) {
+    setError("Please fill in all fields")
+    setIsLoading(false)
+    return
   }
+
+  try {
+    const response = await fetch("https://easystudy-api-production.up.railway.app/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+        user_type: "student"
+      }),
+    })
+
+    const data = await response.json()
+
+    if (data.success) {
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("user", JSON.stringify(data.user))
+      // Redirect to student dashboard
+      window.location.href = "/app/student/dashboard"
+    } else {
+      setError(data.message || "Login failed.")
+    }
+  } catch (err) {
+    setError("Something went wrong. Please try again.")
+  }
+
+  setIsLoading(false)
+}
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
