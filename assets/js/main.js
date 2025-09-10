@@ -1,6 +1,6 @@
 // Main JavaScript file for EasyStudy Frontend
 const API_CONFIG = {
-  BASE_URL: "https://your-backend-domain.com/api",
+  BASE_URL: "https://easystudy-api-production.up.railway.app",
   ENDPOINTS: {
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",
