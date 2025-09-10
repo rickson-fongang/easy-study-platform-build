@@ -43,10 +43,10 @@ class EasyStudyAuth {
         localStorage.setItem("es_token", response.token);
         localStorage.setItem("es_user", JSON.stringify(response.user));
 
-        // Redirect dynamically based on user type
+        // ✅ React/Next.js routing
         const dashboardPath = response.user.user_type === "tutor" 
-          ? "/tutor/dashboard.html" 
-          : "/student/dashboard.html";
+          ? "/app/tutor/dashboard" 
+          : "/app/student/dashboard";
 
         window.location.href = dashboardPath;
       } else {
@@ -77,7 +77,7 @@ class EasyStudyAuth {
       if (response.success && response.user.user_type === "tutor") {
         localStorage.setItem("es_token", response.token);
         localStorage.setItem("es_user", JSON.stringify(response.user));
-        window.location.href = "/tutor/dashboard.html";
+        window.location.href = "/app/tutor/dashboard";
       } else {
         this.showError("loginError", response.message || "Tutor login failed");
       }
@@ -110,7 +110,7 @@ class EasyStudyAuth {
       const response = await this.apiRequest("/register.php", userData);
       if (response.success) {
         alert("Registration successful! Redirecting to login...");
-        setTimeout(() => window.location.href = "/login.html", 2000);
+        setTimeout(() => window.location.href = "/app/login", 2000);
       } else {
         this.showError("registerError", response.message || "Registration failed");
       }
@@ -121,6 +121,8 @@ class EasyStudyAuth {
       this.setLoading("registerBtn", false);
     }
   }
+
+  // --- validation, error, utility methods stay unchanged ---
 
   validateRegistration(data) {
     let valid = true;
