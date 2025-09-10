@@ -2,40 +2,38 @@
 const API_CONFIG = {
   // Update this URL to your railway subdomain
   BASE_URL: "https://easystudy-api-production.up.railway.app",
-  // Example: src/config.js
 
-
-  // API Endpoints
+  // API Endpoints (FIXED - removed .php extensions)
   ENDPOINTS: {
     // Authentication
-    LOGIN: "/auth/login.php",
-    REGISTER: "/auth/register.php",
-    LOGOUT: "/auth/logout.php",
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    LOGOUT: "/auth/logout",
 
     // Users
-    GET_PROFILE: "/users/profile.php",
-    UPDATE_PROFILE: "/users/update.php",
-    GET_STUDENTS: "/users/students.php",
+    GET_PROFILE: "/users/profile",
+    UPDATE_PROFILE: "/users/update", 
+    GET_STUDENTS: "/users/students",
 
     // Videos
-    UPLOAD_VIDEO: "/videos/upload.php",
-    GET_VIDEOS: "/videos/list.php",
-    DELETE_VIDEO: "/videos/delete.php",
-    UPDATE_VIDEO: "/videos/update.php",
+    UPLOAD_VIDEO: "/videos/upload",
+    GET_VIDEOS: "/videos/list",
+    DELETE_VIDEO: "/videos/delete",
+    UPDATE_VIDEO: "/videos/update",
 
     // Tasks
-    CREATE_TASK: "/tasks/create.php",
-    GET_TASKS: "/tasks/list.php",
-    SUBMIT_TASK: "/tasks/submit.php",
-    UPDATE_TASK: "/tasks/update.php",
+    CREATE_TASK: "/tasks/create",
+    GET_TASKS: "/tasks/list",
+    SUBMIT_TASK: "/tasks/submit",
+    UPDATE_TASK: "/tasks/update",
 
     // Chat
-    SEND_MESSAGE: "/chat/send.php",
-    GET_MESSAGES: "/chat/messages.php",
+    SEND_MESSAGE: "/chat/send",
+    GET_MESSAGES: "/chat/messages",
 
     // Dashboard
-    GET_DASHBOARD_DATA: "/dashboard/data.php",
-    GET_PROGRESS: "/dashboard/progress.php",
+    GET_DASHBOARD_DATA: "/dashboard/data",
+    GET_PROGRESS: "/dashboard/progress",
   },
 
   // Request timeout in milliseconds

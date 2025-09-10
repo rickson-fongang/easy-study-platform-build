@@ -1,6 +1,6 @@
 // EasyStudy Authentication Handler
 class EasyStudyAuth {
-  constructor(apiBaseUrl = "https://easystudy-api-production.up.railway.app/auth") {
+  constructor(apiBaseUrl = window.API_CONFIG.BASE_URL) {
     this.apiBaseUrl = apiBaseUrl; 
     this.init();
   }
@@ -38,7 +38,7 @@ class EasyStudyAuth {
     this.setLoading("loginBtn", true);
 
     try {
-      const response = await this.apiRequest("/login.php", { email, password });
+      const response = await this.apiRequest(window.API_CONFIG.ENDPOINTS.LOGIN, { email, password });
       if (response.success) {
         localStorage.setItem("es_token", response.token);
         localStorage.setItem("es_user", JSON.stringify(response.user));
