@@ -73,7 +73,7 @@ class EasyStudyAuth {
     this.setLoading("tutorLoginBtn", true);
 
     try {
-      const response = await this.apiRequest("/login.php", { email, password });
+      const response = await this.apiRequest(window.API_CONFIG.ENDPOINTS.LOGIN, { email, password });
       if (response.success && response.user.user_type === "tutor") {
         localStorage.setItem("es_token", response.token);
         localStorage.setItem("es_user", JSON.stringify(response.user));
@@ -107,7 +107,7 @@ class EasyStudyAuth {
     this.setLoading("registerBtn", true);
 
     try {
-      const response = await this.apiRequest("/register.php", userData);
+      const response = await this.apiRequest(window.API_CONFIG.ENDPOINTS.REGISTER, userData);
       if (response.success) {
         alert("Registration successful! Redirecting to login...");
         setTimeout(() => window.location.href = "/app/login", 2000);
