@@ -55,3 +55,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes neonPulseSlow {
+  0%, 100% {
+    box-shadow: 0 0 5px #00f,
+                0 0 10px #00f,
+                0 0 20px #0ff,
+                0 0 40px #0ff;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px #0ff,
+                0 0 40px #0ff,
+                0 0 60px #00f,
+                0 0 80px #00f;
+    transform: scale(1.08);
+  }
+}
+
+.neon-button {
+  animation: neonPulseSlow 4s ease-in-out infinite;
+}

@@ -105,8 +105,11 @@ export default function HomePage() {
             Join students already learning with EasyStudy and experience the difference.
           </p>
           <Link href="/register">
-            <Button size="lg">Get Started Now</Button>
-          </Link>
+  <Button size="lg" className="w-full sm:w-auto neon-button">
+    Start Learning Today
+  </Button>
+</Link>
+
         </div>
       </section>
 
