@@ -101,11 +101,9 @@ export default function HomePage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
             Join students already learning with EasyStudy and experience the difference.
           </p>
-          <Link href="/register">
-  <Button size="lg" className="w-full sm:w-auto neon-button">
-    Start Learning Today
-  </Button>
-</Link>
+    <Link href="/register">
+            <Button size="lg">Get Started Now</Button>
+          </Link>
 
         </div>
       </section>
