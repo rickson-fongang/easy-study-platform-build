@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Easystudy',
   description: 'Enjoy digital studies',
   generator: 'v0.app',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', // ✅ ADD THIS
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
 }
 
 export default function RootLayout({
