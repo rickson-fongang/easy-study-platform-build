@@ -51,15 +51,12 @@ export default function HomePage() {
             your personal learning companion.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <Button
-                size="lg"
-                className="relative overflow-hidden px-8 py-4 text-lg font-bold border-2 border-cyan-400 text-cyan-400 rounded-lg transition-all duration-300 
-                           hover:bg-cyan-400 hover:text-black animate-pulse shadow-[0_0_20px_#06b6d4]"
-              >
-                Start Learning Today
-              </Button>
-            </Link>
+           <Link href="/register">
+  <Button size="lg" className="w-full sm:w-auto neon-button">
+    Start Learning Today
+  </Button>
+</Link>
+
             <Link href="/tutor-login">
               <Button variant="outline" size="lg" className="w-full sm:w-auto bg-transparent">
                 I'm a Tutor
