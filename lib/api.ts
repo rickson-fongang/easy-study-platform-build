@@ -1,5 +1,5 @@
 // API configuration and utilities for dynamic data fetching
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://easystudy-api-production.up.railway.app"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
 
 export interface ApiResponse<T> {
   success: boolean

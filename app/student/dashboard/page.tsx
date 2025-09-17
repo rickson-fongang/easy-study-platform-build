@@ -7,11 +7,12 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
-import { BookOpen, Clock, MessageCircle, User, Play, FileText, Sparkles, Bell, Settings, RefreshCw } from "lucide-react"
+import { BookOpen, Clock, MessageCircle, User, Play, FileText, Sparkles, Settings, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { TehillahGuide } from "@/components/tehillah-guide"
 import { TehillahProvider, useTehillah } from "@/components/tehillah-provider"
 import { TehillahInsights } from "@/components/tehillah-insights"
+import { NotificationDropdown } from "@/components/notification-dropdown"
 import {
   useStudentProfile,
   useStudentCourses,
@@ -90,9 +91,7 @@ function StudentDashboardContent() {
               <Button variant="ghost" size="sm" onClick={handleRefreshAll}>
                 <RefreshCw className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm">
-                <Bell className="h-4 w-4" />
-              </Button>
+              <NotificationDropdown />
               <Button variant="ghost" size="sm" onClick={openChat}>
                 <MessageCircle className="h-4 w-4" />
               </Button>
@@ -128,10 +127,12 @@ function StudentDashboardContent() {
               My Courses
             </Button>
           </Link>
-          <Button variant="ghost" onClick={openChat}>
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Chat
-          </Button>
+          <Link href="/student/chatroom">
+            <Button variant="ghost">
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Chat
+            </Button>
+          </Link>
           <Link href="/student/tasks">
             <Button variant="ghost">
               <FileText className="h-4 w-4 mr-2" />
@@ -414,7 +415,7 @@ function StudentDashboardContent() {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Link href="/student/chat">
+                <Link href="/student/chatroom">
                   <Button className="w-full justify-start bg-transparent" variant="outline">
                     <MessageCircle className="h-4 w-4 mr-2" />
                     Chat with Friends
