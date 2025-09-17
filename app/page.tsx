@@ -28,37 +28,55 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center text-center text-white">
+      <section className="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
         {/* Background Video */}
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
           src="/assets/videos/hero.mp4" // put video file in public/assets/videos
           autoPlay
           loop
           muted
           playsInline
         />
+
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-full max-w-4xl mx-auto px-4">
+            <Image
+              src="/assets/images/hero-education.png"
+              alt="Online Education Platform"
+              width={800}
+              height={600}
+              className="mx-auto animate-float opacity-80"
+              priority
+            />
+          </div>
+        </div>
+
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-blue-600/60" />
 
         {/* Content */}
         <div className="relative z-10 px-4">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Learn Smarter with <span className="text-primary">EasyStudy</span>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in-up">
+            Learn Smarter with <span className="text-blue-400">EasyStudy</span>
           </h2>
-          <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            A comprehensive study platform that connects tutors and students with AI-powered assistance from Tehillah,
-            your personal learning companion.
+          <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+            Study with Rickson Fongang - A comprehensive study platform that connects tutors and students with
+            AI-powered assistance from Tehillah, your personal learning companion.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-           <Link href="/register">
-  <Button size="lg" className="w-full sm:w-auto neon-button">
-    Start Learning Today
-  </Button>
-</Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
+            <Link href="/register">
+              <Button size="lg" className="w-full sm:w-auto neon-button bg-blue-600 hover:bg-blue-700 border-blue-400">
+                Start Learning Today
+              </Button>
+            </Link>
 
             <Link href="/tutor-login">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto bg-transparent">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto bg-transparent border-blue-400 text-blue-100 hover:bg-blue-800/30"
+              >
                 I'm a Tutor
               </Button>
             </Link>
@@ -71,18 +89,39 @@ export default function HomePage() {
         <div className="container mx-auto">
           <h3 className="text-3xl font-bold text-center text-foreground mb-12">Everything You Need to Succeed</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[ 
-              { icon: <BookOpen className="h-12 w-12 text-primary mb-4" />, title: "Video Tutorials", desc: "Access high-quality video content with time-limited access and progress tracking." },
-              { icon: <Users className="h-12 w-12 text-primary mb-4" />, title: "Student Community", desc: "Connect and chat with fellow students to enhance your learning experience." },
-              { icon: <MessageCircle className="h-12 w-12 text-primary mb-4" />, title: "AI Assistant - Tehillah", desc: "Get personalized guidance and support from your friendly AI learning companion." },
-              { icon: <Clock className="h-12 w-12 text-primary mb-4" />, title: "Time Management", desc: "Built-in countdown timers and deadline tracking to keep you on schedule." },
-              { icon: <Shield className="h-12 w-12 text-primary mb-4" />, title: "Secure Access", desc: "Admin-controlled registration with secure login system for all users." },
-              { icon: <Smartphone className="h-12 w-12 text-primary mb-4" />, title: "Mobile Responsive", desc: "Learn anywhere, anytime with our fully responsive mobile design." }
+            {[
+              {
+                icon: <BookOpen className="h-12 w-12 text-primary mb-4" />,
+                title: "Video Tutorials",
+                desc: "Access high-quality video content with time-limited access and progress tracking.",
+              },
+              {
+                icon: <Users className="h-12 w-12 text-primary mb-4" />,
+                title: "Student Community",
+                desc: "Connect and chat with fellow students to enhance your learning experience.",
+              },
+              {
+                icon: <MessageCircle className="h-12 w-12 text-primary mb-4" />,
+                title: "AI Assistant - Tehillah",
+                desc: "Get personalized guidance and support from your friendly AI learning companion.",
+              },
+              {
+                icon: <Clock className="h-12 w-12 text-primary mb-4" />,
+                title: "Time Management",
+                desc: "Built-in countdown timers and deadline tracking to keep you on schedule.",
+              },
+              {
+                icon: <Shield className="h-12 w-12 text-primary mb-4" />,
+                title: "Secure Access",
+                desc: "Admin-controlled registration with secure login system for all users.",
+              },
+              {
+                icon: <Smartphone className="h-12 w-12 text-primary mb-4" />,
+                title: "Mobile Responsive",
+                desc: "Learn anywhere, anytime with our fully responsive mobile design.",
+              },
             ].map((item, i) => (
-              <Card
-                key={i}
-                className="transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
-              >
+              <Card key={i} className="transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                 <CardHeader>
                   {item.icon}
                   <CardTitle>{item.title}</CardTitle>
@@ -101,10 +140,9 @@ export default function HomePage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
             Join students already learning with EasyStudy and experience the difference.
           </p>
-    <Link href="/register">
+          <Link href="/register">
             <Button size="lg">Get Started Now</Button>
           </Link>
-
         </div>
       </section>
 
@@ -112,7 +150,7 @@ export default function HomePage() {
       <footer className="border-t border-border bg-card py-10 px-4">
         <div className="container mx-auto text-center">
           <Image
-            src="./assets/images/Dp.jpg" 
+            src="./assets/images/Dp.jpg"
             alt="Developer"
             width={100}
             height={100}
@@ -123,14 +161,20 @@ export default function HomePage() {
             <a href="https://github.com/rickson-fongang" target="_blank" rel="noreferrer">
               <FaGithub className="text-2xl hover:text-primary transition" />
             </a>
-            <a href="https://www.linkedin.com/in/rickson-fongang-210824230?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noreferrer">
+            <a
+              href="https://www.linkedin.com/in/rickson-fongang-210824230?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+              target="_blank"
+              rel="noreferrer"
+            >
               <FaLinkedin className="text-2xl hover:text-primary transition" />
             </a>
             <a href="https://x.com/FongangRickson?t=5XiqZl6J5qGyek9K6RYYTw&s=09" target="_blank" rel="noreferrer">
               <FaTwitter className="text-2xl hover:text-primary transition" />
             </a>
           </div>
-          <p className="mt-6 text-muted-foreground">© {new Date().getFullYear()} EasyStudy study with ease. All rights reserved.</p>
+          <p className="mt-6 text-muted-foreground">
+            © {new Date().getFullYear()} EasyStudy study with ease. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>
