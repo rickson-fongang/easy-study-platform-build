@@ -112,7 +112,7 @@ export default function HomePage() {
       <footer className="border-t border-border bg-card py-10 px-4">
         <div className="container mx-auto text-center">
           <Image
-            src="/assets/images/Dp.jpg" 
+            src="./assets/images/Dp.jpg" 
             alt="Developer"
             width={100}
             height={100}
