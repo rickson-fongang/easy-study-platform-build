@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -41,18 +41,6 @@ function StudentDashboardContent({
 
   const { openChat } = useTehillah();
 
-  // Refs for scrolling
-  const recentRef = useRef(null);
-  const coursesRef = useRef(null);
-  const chatRef = useRef(null);
-  const taskRef = useRef(null);
-
-  const handleNavClick = (ref) => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -80,8 +68,8 @@ function StudentDashboardContent({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
+      {/* Header - sticky */}
+      <header className="border-b border-border bg-card sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -116,19 +104,23 @@ function StudentDashboardContent({
         </div>
       </header>
 
-      {/* Navbar */}
-      <nav className="w-full bg-primary/10 border-b border-border">
+      {/* Navbar - sticky below header */}
+      <nav className="w-full bg-primary/10 border-b border-border sticky top-[64px] z-40">
         <div className="container mx-auto px-4 py-2 flex justify-center gap-6">
-          <Button variant="ghost" onClick={() => handleNavClick(recentRef)}>
+          <Button variant="ghost">
+            <Clock className="h-4 w-4 mr-2" />
             Recent
           </Button>
-          <Button variant="ghost" onClick={() => handleNavClick(coursesRef)}>
+          <Button variant="ghost">
+            <BookOpen className="h-4 w-4 mr-2" />
             My Courses
           </Button>
-          <Button variant="ghost" onClick={() => handleNavClick(chatRef)}>
+          <Button variant="ghost">
+            <MessageCircle className="h-4 w-4 mr-2" />
             Chat
           </Button>
-          <Button variant="ghost" onClick={() => handleNavClick(taskRef)}>
+          <Button variant="ghost">
+            <FileText className="h-4 w-4 mr-2" />
             Task
           </Button>
         </div>
@@ -197,185 +189,177 @@ function StudentDashboardContent({
             <TehillahInsights userRole="student" context="dashboard" />
 
             {/* Course Progress */}
-            <div ref={coursesRef}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BookOpen className="h-5 w-5" />
-                    <span>My Courses</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Track your progress across all enrolled courses
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {courses.length === 0 ? (
-                    <p>No courses enrolled yet.</p>
-                  ) : (
-                    courses.map((course) => (
-                      <div
-                        key={course.id}
-                        className="p-4 border border-border rounded-lg"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="font-medium text-foreground">
-                            {course.title}
-                          </h3>
-                          <Badge
-                            variant={
-                              course.status === "active"
-                                ? "default"
-                                : "secondary"
-                            }
-                          >
-                            {course.status}
-                          </Badge>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BookOpen className="h-5 w-5" />
+                  <span>My Courses</span>
+                </CardTitle>
+                <CardDescription>
+                  Track your progress across all enrolled courses
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {courses.length === 0 ? (
+                  <p>No courses enrolled yet.</p>
+                ) : (
+                  courses.map((course) => (
+                    <div
+                      key={course.id}
+                      className="p-4 border border-border rounded-lg"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-medium text-foreground">
+                          {course.title}
+                        </h3>
+                        <Badge
+                          variant={
+                            course.status === "active"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
+                          {course.status}
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>
+                            {course.watchedVideos}/{course.totalVideos} videos
+                            completed
+                          </span>
+                          <span>{course.progress}%</span>
                         </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm text-muted-foreground">
-                            <span>
-                              {course.watchedVideos}/{course.totalVideos} videos
-                              completed
-                            </span>
-                            <span>{course.progress}%</span>
-                          </div>
-                          <Progress value={course.progress} className="h-2" />
-                          <div className="flex justify-between items-center">
-                            <p className="text-xs text-muted-foreground">
-                              Next deadline:{" "}
-                              {new Date(course.nextDeadline).toLocaleDateString()}
-                            </p>
-                            <Button size="sm" variant="outline">
-                              <Play className="h-3 w-3 mr-1" />
-                              Continue
-                            </Button>
-                          </div>
+                        <Progress value={course.progress} className="h-2" />
+                        <div className="flex justify-between items-center">
+                          <p className="text-xs text-muted-foreground">
+                            Next deadline:{" "}
+                            {new Date(course.nextDeadline).toLocaleDateString()}
+                          </p>
+                          <Button size="sm" variant="outline">
+                            <Play className="h-3 w-3 mr-1" />
+                            Continue
+                          </Button>
                         </div>
                       </div>
-                    ))
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                    </div>
+                  ))
+                )}
+              </CardContent>
+            </Card>
 
             {/* Recent Activity */}
-            <div ref={recentRef}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>
-                    Your latest learning activities
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {recentActivities.length === 0 ? (
-                      <p>No recent activities.</p>
-                    ) : (
-                      recentActivities.map((activity) => (
-                        <div
-                          key={activity.id}
-                          className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50"
-                        >
-                          <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                            {activity.type === "video" && (
-                              <Play className="h-4 w-4 text-primary" />
-                            )}
-                            {activity.type === "task" && (
-                              <FileText className="h-4 w-4 text-primary" />
-                            )}
-                            {activity.type === "message" && (
-                              <MessageCircle className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-foreground">
-                              {activity.title}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {activity.time}
-                            </p>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Chat Section */}
-            <div ref={chatRef}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Chat</CardTitle>
-                  <CardDescription>
-                    Interact with friends and tutors
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button
-                    className="w-full justify-start bg-transparent"
-                    variant="outline"
-                    onClick={openChat}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Open Chat
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Task Section */}
-            <div ref={taskRef}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Tasks</CardTitle>
-                  <CardDescription>View and manage your tasks</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {upcomingTasks.length === 0 ? (
-                    <p>No upcoming tasks.</p>
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  Your latest learning activities
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {recentActivities.length === 0 ? (
+                    <p>No recent activities.</p>
                   ) : (
-                    upcomingTasks.map((task) => (
+                    recentActivities.map((activity) => (
                       <div
-                        key={task.id}
-                        className="p-3 border border-border rounded-lg mb-2"
+                        key={activity.id}
+                        className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50"
                       >
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="text-sm font-medium text-foreground">
-                            {task.title}
-                          </h4>
-                          <Badge
-                            variant={
-                              task.status === "pending"
-                                ? "destructive"
-                                : "secondary"
-                            }
-                            className="text-xs"
-                          >
-                            {task.status}
-                          </Badge>
+                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                          {activity.type === "video" && (
+                            <Play className="h-4 w-4 text-primary" />
+                          )}
+                          {activity.type === "task" && (
+                            <FileText className="h-4 w-4 text-primary" />
+                          )}
+                          {activity.type === "message" && (
+                            <MessageCircle className="h-4 w-4 text-primary" />
+                          )}
                         </div>
-                        <p className="text-xs text-muted-foreground mb-2">
-                          {task.subject}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Due: {new Date(task.dueDate).toLocaleDateString()}
-                        </p>
-                        <Button
-                          size="sm"
-                          className="w-full mt-2 bg-transparent"
-                          variant="outline"
-                        >
-                          View Task
-                        </Button>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-foreground">
+                            {activity.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {activity.time}
+                          </p>
+                        </div>
                       </div>
                     ))
                   )}
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Chat Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Chat</CardTitle>
+                <CardDescription>
+                  Interact with friends and tutors
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  className="w-full justify-start bg-transparent"
+                  variant="outline"
+                  onClick={openChat}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Open Chat
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Task Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Tasks</CardTitle>
+                <CardDescription>View and manage your tasks</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {upcomingTasks.length === 0 ? (
+                  <p>No upcoming tasks.</p>
+                ) : (
+                  upcomingTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="p-3 border border-border rounded-lg mb-2"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="text-sm font-medium text-foreground">
+                          {task.title}
+                        </h4>
+                        <Badge
+                          variant={
+                            task.status === "pending"
+                              ? "destructive"
+                              : "secondary"
+                          }
+                          className="text-xs"
+                        >
+                          {task.status}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        {task.subject}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Due: {new Date(task.dueDate).toLocaleDateString()}
+                      </p>
+                      <Button
+                        size="sm"
+                        className="w-full mt-2 bg-transparent"
+                        variant="outline"
+                      >
+                        View Task
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar */}
