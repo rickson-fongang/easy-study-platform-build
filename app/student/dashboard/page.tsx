@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BookOpen, Clock, MessageCircle, User, Play, FileText, Sparkles, Bell, Settings, RefreshCw } from "lucide-react"
+import Link from "next/link"
 import { TehillahGuide } from "@/components/tehillah-guide"
 import { TehillahProvider, useTehillah } from "@/components/tehillah-provider"
 import { TehillahInsights } from "@/components/tehillah-insights"
@@ -78,10 +79,10 @@ function StudentDashboardContent() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
+              <Link href="/" className="flex items-center space-x-2">
                 <BookOpen className="h-6 w-6 text-primary" />
                 <span className="text-lg font-semibold text-foreground">EasyStudy</span>
-              </div>
+              </Link>
               <Badge variant="secondary">Student</Badge>
             </div>
 
@@ -92,21 +93,23 @@ function StudentDashboardContent() {
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={openChat}>
                 <MessageCircle className="h-4 w-4" />
               </Button>
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={profile?.avatar || "/placeholder.svg"} />
-                <AvatarFallback>
-                  {profileLoading
-                    ? "..."
-                    : profile?.name
-                        ?.split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
+              <Link href="/student/profile">
+                <Avatar className="h-8 w-8 cursor-pointer">
+                  <AvatarImage src={profile?.avatar || "/placeholder.svg"} />
+                  <AvatarFallback>
+                    {profileLoading
+                      ? "..."
+                      : profile?.name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
             </div>
           </div>
         </div>
@@ -119,18 +122,22 @@ function StudentDashboardContent() {
             <Clock className="h-4 w-4 mr-2" />
             Recent
           </Button>
-          <Button variant="ghost" onClick={() => handleNavClick(coursesRef)}>
-            <BookOpen className="h-4 w-4 mr-2" />
-            My Courses
-          </Button>
-          <Button variant="ghost" onClick={() => handleNavClick(chatRef)}>
+          <Link href="/student/courses">
+            <Button variant="ghost">
+              <BookOpen className="h-4 w-4 mr-2" />
+              My Courses
+            </Button>
+          </Link>
+          <Button variant="ghost" onClick={openChat}>
             <MessageCircle className="h-4 w-4 mr-2" />
             Chat
           </Button>
-          <Button variant="ghost" onClick={() => handleNavClick(taskRef)}>
-            <FileText className="h-4 w-4 mr-2" />
-            Task
-          </Button>
+          <Link href="/student/tasks">
+            <Button variant="ghost">
+              <FileText className="h-4 w-4 mr-2" />
+              Tasks
+            </Button>
+          </Link>
         </div>
       </nav>
 
@@ -190,10 +197,17 @@ function StudentDashboardContent() {
             <div ref={coursesRef}>
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BookOpen className="h-5 w-5" />
-                    <span>My Courses</span>
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <BookOpen className="h-5 w-5" />
+                      <span>My Courses</span>
+                    </div>
+                    <Link href="/student/courses">
+                      <Button variant="ghost" size="sm">
+                        View All
+                      </Button>
+                    </Link>
+                  </div>
                   <CardDescription>Track your progress across all enrolled courses</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -221,7 +235,7 @@ function StudentDashboardContent() {
                   ) : courses.length === 0 ? (
                     <p className="text-center py-8 text-muted-foreground">No courses enrolled yet.</p>
                   ) : (
-                    courses.map((course) => (
+                    courses.slice(0, 2).map((course) => (
                       <div key={course.id} className="p-4 border border-border rounded-lg">
                         <div className="flex items-center justify-between mb-3">
                           <h3 className="font-medium text-foreground">{course.title}</h3>
@@ -239,10 +253,12 @@ function StudentDashboardContent() {
                             <p className="text-xs text-muted-foreground">
                               Next deadline: {new Date(course.nextDeadline).toLocaleDateString()}
                             </p>
-                            <Button size="sm" variant="outline">
-                              <Play className="h-3 w-3 mr-1" />
-                              Continue
-                            </Button>
+                            <Link href={`/student/courses/${course.id}`}>
+                              <Button size="sm" variant="outline">
+                                <Play className="h-3 w-3 mr-1" />
+                                Continue
+                              </Button>
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -323,7 +339,14 @@ function StudentDashboardContent() {
             <div ref={taskRef}>
               <Card>
                 <CardHeader>
-                  <CardTitle>Tasks</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Tasks</CardTitle>
+                    <Link href="/student/tasks">
+                      <Button variant="ghost" size="sm">
+                        View All
+                      </Button>
+                    </Link>
+                  </div>
                   <CardDescription>View and manage your tasks</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -349,7 +372,7 @@ function StudentDashboardContent() {
                   ) : tasks.length === 0 ? (
                     <p className="text-center py-4 text-muted-foreground">No upcoming tasks.</p>
                   ) : (
-                    tasks.map((task) => (
+                    tasks.slice(0, 2).map((task) => (
                       <div key={task.id} className="p-3 border border-border rounded-lg mb-2">
                         <div className="flex justify-between items-start mb-2">
                           <h4 className="text-sm font-medium text-foreground">{task.title}</h4>
@@ -370,9 +393,11 @@ function StudentDashboardContent() {
                         <p className="text-xs text-muted-foreground">
                           Due: {new Date(task.dueDate).toLocaleDateString()}
                         </p>
-                        <Button size="sm" className="w-full mt-2 bg-transparent" variant="outline">
-                          View Task
-                        </Button>
+                        <Link href={`/student/tasks/${task.id}`}>
+                          <Button size="sm" className="w-full mt-2 bg-transparent" variant="outline">
+                            View Task
+                          </Button>
+                        </Link>
                       </div>
                     ))
                   )}
@@ -389,22 +414,28 @@ function StudentDashboardContent() {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start bg-transparent" variant="outline">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Chat with Friends
-                </Button>
-                <Button className="w-full justify-start bg-transparent" variant="outline">
-                  <User className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
+                <Link href="/student/chat">
+                  <Button className="w-full justify-start bg-transparent" variant="outline">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Chat with Friends
+                  </Button>
+                </Link>
+                <Link href="/student/profile">
+                  <Button className="w-full justify-start bg-transparent" variant="outline">
+                    <User className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                </Link>
                 <Button className="w-full justify-start bg-transparent" variant="outline" onClick={openChat}>
                   <Sparkles className="h-4 w-4 mr-2" />
                   Ask Tehillah
                 </Button>
-                <Button className="w-full justify-start bg-transparent" variant="outline">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Settings
-                </Button>
+                <Link href="/student/settings">
+                  <Button className="w-full justify-start bg-transparent" variant="outline">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
