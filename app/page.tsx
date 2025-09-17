@@ -14,7 +14,7 @@ export default function HomePage() {
           <div className="flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold text-foreground">EasyStudy</h1>
-            <span className="text-sm text-muted-foreground">With Rickson Fongang</span>
+            <span className="text-sm text-muted-foreground">study with ease</span>
           </div>
           <div className="flex space-x-4">
             <Link href="/login">
@@ -112,7 +112,7 @@ export default function HomePage() {
       <footer className="border-t border-border bg-card py-10 px-4">
         <div className="container mx-auto text-center">
           <Image
-            src="/assets/images/profile.jpg" // add your profile image in public/assets/images
+            src="/assets/images/Dp.jpg" 
             alt="Developer"
             width={100}
             height={100}
@@ -123,14 +123,14 @@ export default function HomePage() {
             <a href="https://github.com/rickson-fongang" target="_blank" rel="noreferrer">
               <FaGithub className="text-2xl hover:text-primary transition" />
             </a>
-            <a href="https://linkedin.com/in/your-link" target="_blank" rel="noreferrer">
+            <a href="https://www.linkedin.com/in/rickson-fongang-210824230?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noreferrer">
               <FaLinkedin className="text-2xl hover:text-primary transition" />
             </a>
-            <a href="https://twitter.com/your-handle" target="_blank" rel="noreferrer">
+            <a href="https://x.com/FongangRickson?t=5XiqZl6J5qGyek9K6RYYTw&s=09" target="_blank" rel="noreferrer">
               <FaTwitter className="text-2xl hover:text-primary transition" />
             </a>
           </div>
-          <p className="mt-6 text-muted-foreground">© {new Date().getFullYear()} EasyStudy with Rickson Fongang. All rights reserved.</p>
+          <p className="mt-6 text-muted-foreground">© {new Date().getFullYear()} EasyStudy study with ease. All rights reserved.</p>
         </div>
       </footer>
     </div>
