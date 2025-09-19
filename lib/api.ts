@@ -1,5 +1,5 @@
 // API configuration and utilities for dynamic data fetching
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://easystudy-api-production.up.railway.app/api"
 
 export interface ApiResponse<T> {
   success: boolean
@@ -78,8 +78,11 @@ export interface TutorStats {
 async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   try {
     const token = localStorage.getItem("authToken")
+    const fullUrl = `${API_BASE_URL}${endpoint}`
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    console.log("[v0] Making API request to:", fullUrl)
+
+    const response = await fetch(fullUrl, {
       headers: {
         "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
@@ -88,9 +91,13 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
       ...options,
     })
 
+    console.log("[v0] API response status:", response.status)
+
     const data = await response.json()
+    console.log("[v0] API response data:", data)
 
     if (!response.ok) {
+      console.log("[v0] API request failed:", data.message || "Unknown error")
       return {
         success: false,
         error: data.message || "An error occurred",
@@ -102,7 +109,7 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
       data: data.data || data,
     }
   } catch (error) {
-    console.error("API request failed:", error)
+    console.error("[v0] API request failed:", error)
     return {
       success: false,
       error: "Network error occurred",

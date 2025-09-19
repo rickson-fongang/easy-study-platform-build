@@ -126,3 +126,48 @@
     opacity: 1;
   }
 }
+
+/* Added mobile-specific utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Better touch targets */
+  button {
+    min-height: 44px;
+  }
+
+  /* Improved text readability */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* Ensure cards don't break on small screens */
+@media (max-width: 480px) {
+  .card {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+}

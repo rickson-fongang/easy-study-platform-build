@@ -11,14 +11,20 @@ export function useStudentProfile() {
   const fetchProfile = useCallback(async () => {
     try {
       setLoading(true)
+      setError(null)
+      console.log("[v0] Fetching student profile...")
+
       const response = await studentApi.getProfile()
 
       if (response.success && response.data) {
+        console.log("[v0] Profile loaded successfully:", response.data)
         setProfile(response.data)
       } else {
+        console.log("[v0] Profile API failed, using demo data:", response.error)
+        setError(response.error || "Failed to load profile")
         setProfile({
           id: "demo-student",
-          name: "Alex Johnson",
+          name: "Alex Johnson (Demo)",
           email: "alex.johnson@email.com",
           role: "student",
           avatar: "/placeholder.svg?height=32&width=32",
@@ -27,10 +33,11 @@ export function useStudentProfile() {
         })
       }
     } catch (err) {
+      console.error("[v0] Profile fetch error:", err)
       setError("Failed to load profile")
       setProfile({
         id: "demo-student",
-        name: "Alex Johnson",
+        name: "Alex Johnson (Demo)",
         email: "alex.johnson@email.com",
         role: "student",
         avatar: "/placeholder.svg?height=32&width=32",
