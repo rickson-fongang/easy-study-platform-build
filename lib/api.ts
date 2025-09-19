@@ -119,19 +119,19 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
 
 // Student API functions
 export const studentApi = {
-  getProfile: () => apiRequest<User>("/student/profile"),
-  getCourses: () => apiRequest<Course[]>("/student/courses"),
-  getActivities: (limit = 10) => apiRequest<Activity[]>(`/student/activities?limit=${limit}`),
-  getTasks: (status?: string) => apiRequest<Task[]>(`/student/tasks${status ? `?status=${status}` : ""}`),
-  getStats: () => apiRequest<StudyStats>("/student/stats"),
-  getTimeRemaining: () => apiRequest<{ timeRemaining: number }>("/student/time-remaining"),
+  getProfile: () => apiRequest<User>("/students/profile"),
+  getCourses: () => apiRequest<Course[]>("/students/courses"),
+  getActivities: (limit = 10) => apiRequest<Activity[]>(`/students/activities?limit=${limit}`),
+  getTasks: (status?: string) => apiRequest<Task[]>(`/students/tasks${status ? `?status=${status}` : ""}`),
+  getStats: () => apiRequest<StudyStats>("/students/stats"),
+  getTimeRemaining: () => apiRequest<{ timeRemaining: number }>("/students/time-remaining"),
   updateProfile: (data: Partial<User>) =>
-    apiRequest<User>("/student/profile", {
+    apiRequest<User>("/students/profile", {
       method: "PUT",
       body: JSON.stringify(data),
     }),
   submitTask: (taskId: string, submission: FormData) =>
-    apiRequest<Task>(`/student/tasks/${taskId}/submit`, {
+    apiRequest<Task>(`/students/tasks/${taskId}/submit`, {
       method: "POST",
       body: submission,
     }),
@@ -139,33 +139,33 @@ export const studentApi = {
 
 // Tutor API functions
 export const tutorApi = {
-  getProfile: () => apiRequest<User>("/tutor/profile"),
-  getStats: () => apiRequest<TutorStats>("/tutor/stats"),
-  getStudents: (status?: string) => apiRequest<User[]>(`/tutor/students${status ? `?status=${status}` : ""}`),
-  getPendingStudents: () => apiRequest<User[]>("/tutor/students/pending"),
-  getVideos: () => apiRequest<any[]>("/tutor/videos"),
-  getTasks: () => apiRequest<Task[]>("/tutor/tasks"),
-  getTaskSubmissions: () => apiRequest<Task[]>("/tutor/tasks/submissions"),
+  getProfile: () => apiRequest<User>("/tutors/profile"),
+  getStats: () => apiRequest<TutorStats>("/tutors/stats"),
+  getStudents: (status?: string) => apiRequest<User[]>(`/tutors/students${status ? `?status=${status}` : ""}`),
+  getPendingStudents: () => apiRequest<User[]>("/tutors/students/pending"),
+  getVideos: () => apiRequest<any[]>("/tutors/videos"),
+  getTasks: () => apiRequest<Task[]>("/tutors/tasks"),
+  getTaskSubmissions: () => apiRequest<Task[]>("/tutors/tasks/submissions"),
   approveStudent: (studentId: string) =>
-    apiRequest<{ success: boolean }>(`/tutor/students/${studentId}/approve`, {
+    apiRequest<{ success: boolean }>(`/tutors/students/${studentId}/approve`, {
       method: "POST",
     }),
   rejectStudent: (studentId: string) =>
-    apiRequest<{ success: boolean }>(`/tutor/students/${studentId}/reject`, {
+    apiRequest<{ success: boolean }>(`/tutors/students/${studentId}/reject`, {
       method: "POST",
     }),
   updateTimeLimit: (timeLimit: number) =>
-    apiRequest<{ success: boolean }>("/tutor/settings/time-limit", {
+    apiRequest<{ success: boolean }>("/tutors/settings/time-limit", {
       method: "PUT",
       body: JSON.stringify({ timeLimit }),
     }),
   createTask: (taskData: Partial<Task>) =>
-    apiRequest<Task>("/tutor/tasks", {
+    apiRequest<Task>("/tutors/tasks", {
       method: "POST",
       body: JSON.stringify(taskData),
     }),
   gradeTask: (taskId: string, grade: number, feedback?: string) =>
-    apiRequest<Task>(`/tutor/tasks/${taskId}/grade`, {
+    apiRequest<Task>(`/tutors/tasks/${taskId}/grade`, {
       method: "PUT",
       body: JSON.stringify({ grade, feedback }),
     }),

@@ -42,9 +42,9 @@ export default function ChatroomPage() {
   const [selectedChat, setSelectedChat] = useState<ChatRoom | null>(null)
   const [message, setMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
+  const [showChatList, setShowChatList] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Demo data
   const [chatRooms] = useState<ChatRoom[]>([
     {
       id: "1",
@@ -166,6 +166,16 @@ export default function ChatroomPage() {
     }
   }
 
+  const handleChatSelect = (chat: ChatRoom) => {
+    setSelectedChat(chat)
+    setShowChatList(false) // Hide chat list on mobile when chat is selected
+  }
+
+  const handleBackToChats = () => {
+    setShowChatList(true)
+    setSelectedChat(null)
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -181,17 +191,25 @@ export default function ChatroomPage() {
               </Link>
               <div className="flex items-center space-x-2">
                 <Users className="h-5 w-5 text-primary" />
-                <h1 className="text-xl font-semibold">Chatroom</h1>
+                <h1 className="text-xl font-semibold">
+                  {!showChatList && selectedChat ? selectedChat.name : "Chatroom"}
+                </h1>
               </div>
             </div>
+            {!showChatList && selectedChat && (
+              <Button variant="ghost" size="sm" className="lg:hidden" onClick={handleBackToChats}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Chats
+              </Button>
+            )}
           </div>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-4 gap-6 h-[calc(100vh-200px)]">
+        <div className="lg:grid lg:grid-cols-4 lg:gap-6 h-[calc(100vh-200px)]">
           {/* Chat List Sidebar */}
-          <div className="lg:col-span-1">
+          <div className={`lg:col-span-1 ${showChatList ? "block" : "hidden lg:block"}`}>
             <Card className="h-full">
               <CardHeader>
                 <CardTitle className="text-lg">Chats</CardTitle>
@@ -206,7 +224,7 @@ export default function ChatroomPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-0">
-                <ScrollArea className="h-[calc(100vh-350px)]">
+                <ScrollArea className="h-[calc(100vh-350px)] lg:h-[calc(100vh-350px)]">
                   <div className="space-y-1 p-4">
                     {filteredChats.map((chat) => (
                       <div
@@ -214,7 +232,7 @@ export default function ChatroomPage() {
                         className={`p-3 rounded-lg cursor-pointer transition-colors ${
                           selectedChat?.id === chat.id ? "bg-primary/10 border border-primary/20" : "hover:bg-muted/50"
                         }`}
-                        onClick={() => setSelectedChat(chat)}
+                        onClick={() => handleChatSelect(chat)}
                       >
                         <div className="flex items-center space-x-3">
                           <div className="relative">
@@ -260,13 +278,18 @@ export default function ChatroomPage() {
           </div>
 
           {/* Chat Area */}
-          <div className="lg:col-span-3">
+          <div
+            className={`lg:col-span-3 ${!showChatList ? "block" : "hidden lg:block"} ${!showChatList ? "mt-0" : "mt-6 lg:mt-0"}`}
+          >
             {selectedChat ? (
               <Card className="h-full flex flex-col">
                 {/* Chat Header */}
                 <CardHeader className="border-b">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
+                      <Button variant="ghost" size="sm" className="lg:hidden p-1" onClick={handleBackToChats}>
+                        <ArrowLeft className="h-4 w-4" />
+                      </Button>
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={selectedChat.participants[0]?.avatar || "/placeholder.svg"} />
                         <AvatarFallback>
@@ -308,7 +331,7 @@ export default function ChatroomPage() {
 
                 {/* Messages */}
                 <CardContent className="flex-1 p-0">
-                  <ScrollArea className="h-[calc(100vh-400px)] p-4">
+                  <ScrollArea className="h-[calc(100vh-300px)] lg:h-[calc(100vh-400px)] p-4">
                     <div className="space-y-4">
                       {messages.map((msg) => (
                         <div

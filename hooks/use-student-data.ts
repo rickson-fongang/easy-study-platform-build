@@ -20,30 +20,14 @@ export function useStudentProfile() {
         console.log("[v0] Profile loaded successfully:", response.data)
         setProfile(response.data)
       } else {
-        console.log("[v0] Profile API failed, using demo data:", response.error)
+        console.log("[v0] Profile API failed:", response.error)
         setError(response.error || "Failed to load profile")
-        setProfile({
-          id: "demo-student",
-          name: "Alex Johnson (Demo)",
-          email: "alex.johnson@email.com",
-          role: "student",
-          avatar: "/placeholder.svg?height=32&width=32",
-          createdAt: new Date().toISOString(),
-          lastActive: new Date().toISOString(),
-        })
+        setProfile(null)
       }
     } catch (err) {
       console.error("[v0] Profile fetch error:", err)
       setError("Failed to load profile")
-      setProfile({
-        id: "demo-student",
-        name: "Alex Johnson (Demo)",
-        email: "alex.johnson@email.com",
-        role: "student",
-        avatar: "/placeholder.svg?height=32&width=32",
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
-      })
+      setProfile(null)
     } finally {
       setLoading(false)
     }
@@ -69,47 +53,12 @@ export function useStudentCourses() {
       if (response.success && response.data) {
         setCourses(response.data)
       } else {
-        setCourses([
-          {
-            id: "1",
-            title: "Mathematics Fundamentals",
-            description: "Learn the basics of mathematics",
-            progress: 75,
-            totalVideos: 12,
-            watchedVideos: 9,
-            nextDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "active",
-            tutorId: "tutor-1",
-            enrolledAt: new Date().toISOString(),
-          },
-          {
-            id: "2",
-            title: "Physics Basics",
-            description: "Introduction to physics concepts",
-            progress: 45,
-            totalVideos: 8,
-            watchedVideos: 4,
-            nextDeadline: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "active",
-            tutorId: "tutor-1",
-            enrolledAt: new Date().toISOString(),
-          },
-          {
-            id: "3",
-            title: "Chemistry Introduction",
-            description: "Basic chemistry principles",
-            progress: 20,
-            totalVideos: 10,
-            watchedVideos: 2,
-            nextDeadline: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "pending",
-            tutorId: "tutor-1",
-            enrolledAt: new Date().toISOString(),
-          },
-        ])
+        setError(response.error || "Failed to load courses")
+        setCourses([])
       }
     } catch (err) {
       setError("Failed to load courses")
+      setCourses([])
     } finally {
       setLoading(false)
     }
@@ -135,34 +84,12 @@ export function useStudentActivities() {
       if (response.success && response.data) {
         setActivities(response.data)
       } else {
-        setActivities([
-          {
-            id: "1",
-            type: "video",
-            title: "Algebra Basics - Chapter 3",
-            time: "2 hours ago",
-            userId: "demo-student",
-            courseId: "1",
-          },
-          {
-            id: "2",
-            type: "task",
-            title: "Physics Problem Set 1",
-            time: "1 day ago",
-            userId: "demo-student",
-            courseId: "2",
-          },
-          {
-            id: "3",
-            type: "message",
-            title: "New message from tutor",
-            time: "2 days ago",
-            userId: "demo-student",
-          },
-        ])
+        setError(response.error || "Failed to load activities")
+        setActivities([])
       }
     } catch (err) {
       setError("Failed to load activities")
+      setActivities([])
     } finally {
       setLoading(false)
     }
@@ -188,33 +115,12 @@ export function useStudentTasks() {
       if (response.success && response.data) {
         setTasks(response.data)
       } else {
-        setTasks([
-          {
-            id: "1",
-            title: "Math Assignment 4",
-            description: "Complete exercises 1-10",
-            subject: "Mathematics",
-            dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "pending",
-            courseId: "1",
-            studentId: "demo-student",
-            tutorId: "tutor-1",
-          },
-          {
-            id: "2",
-            title: "Physics Lab Report",
-            description: "Write lab report for experiment 3",
-            subject: "Physics",
-            dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "in-progress",
-            courseId: "2",
-            studentId: "demo-student",
-            tutorId: "tutor-1",
-          },
-        ])
+        setError(response.error || "Failed to load tasks")
+        setTasks([])
       }
     } catch (err) {
       setError("Failed to load tasks")
+      setTasks([])
     } finally {
       setLoading(false)
     }
@@ -240,17 +146,12 @@ export function useStudentStats() {
       if (response.success && response.data) {
         setStats(response.data)
       } else {
-        setStats({
-          videosWatched: 12,
-          tasksCompleted: 5,
-          studyHours: 8.5,
-          messagesSent: 23,
-          weeklyProgress: 78,
-          totalCourses: 3,
-        })
+        setError(response.error || "Failed to load stats")
+        setStats(null)
       }
     } catch (err) {
       setError("Failed to load stats")
+      setStats(null)
     } finally {
       setLoading(false)
     }
