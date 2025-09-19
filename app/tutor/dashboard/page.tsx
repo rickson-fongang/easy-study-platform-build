@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   BookOpen,
@@ -25,106 +24,57 @@ import {
   Eye,
   Send,
   Sparkles,
+  Loader2,
 } from "lucide-react"
 import { TehillahProvider, useTehillah } from "@/components/tehillah-provider"
 import { TehillahInsights } from "@/components/tehillah-insights"
+import { useTutorProfile, useTutorStats, useTutorStudents, useTutorTasks } from "@/hooks/use-tutor-data"
 
 function TutorDashboardContent() {
   const [activeTab, setActiveTab] = useState("overview")
   const { openChat } = useTehillah()
 
-  // Mock data
-  const tutorName = "Rickson Fongang"
-  const stats = {
-    totalStudents: 45,
-    activeStudents: 38,
-    totalVideos: 24,
-    totalTasks: 12,
-    pendingApprovals: 3,
-    messagesUnread: 7,
+  const { profile, loading: profileLoading } = useTutorProfile()
+  const { stats, loading: statsLoading } = useTutorStats()
+  const { students, pendingStudents, loading: studentsLoading, approveStudent, rejectStudent } = useTutorStudents()
+  const { tasks, submissions, loading: tasksLoading, gradeTask } = useTutorTasks()
+
+  const tutorName = profile?.name || "Loading..."
+  const isLoading = profileLoading || statsLoading || studentsLoading || tasksLoading
+
+  // Default stats if loading
+  const displayStats = stats || {
+    totalStudents: 0,
+    activeStudents: 0,
+    totalVideos: 0,
+    totalTasks: 0,
+    pendingApprovals: 0,
+    messagesUnread: 0,
   }
 
-  const recentStudents = [
-    {
-      id: 1,
-      name: "Alex Johnson",
-      email: "alex@email.com",
-      progress: 75,
-      lastActive: "2 hours ago",
-      status: "active",
-    },
-    {
-      id: 2,
-      name: "Sarah Chen",
-      email: "sarah@email.com",
-      progress: 60,
-      lastActive: "1 day ago",
-      status: "active",
-    },
-    {
-      id: 3,
-      name: "Mike Rodriguez",
-      email: "mike@email.com",
-      progress: 45,
-      lastActive: "3 days ago",
-      status: "inactive",
-    },
-  ]
+  const handleApproveStudent = async (studentId: string) => {
+    const result = await approveStudent(studentId)
+    if (result.success) {
+      // Success feedback could be added here
+      console.log("Student approved successfully")
+    }
+  }
 
-  const pendingStudents = [
-    {
-      id: 1,
-      name: "Emma Wilson",
-      email: "emma@email.com",
-      registrationDate: "2024-01-10",
-      adminCode: "STUDY2024",
-    },
-    {
-      id: 2,
-      name: "David Kim",
-      email: "david@email.com",
-      registrationDate: "2024-01-09",
-      adminCode: "STUDY2024",
-    },
-  ]
+  const handleRejectStudent = async (studentId: string) => {
+    const result = await rejectStudent(studentId)
+    if (result.success) {
+      // Success feedback could be added here
+      console.log("Student rejected successfully")
+    }
+  }
 
-  const recentVideos = [
-    {
-      id: 1,
-      title: "Algebra Fundamentals - Chapter 1",
-      subject: "Mathematics",
-      duration: "15:30",
-      views: 23,
-      uploadDate: "2024-01-08",
-    },
-    {
-      id: 2,
-      title: "Physics: Newton's Laws",
-      subject: "Physics",
-      duration: "22:15",
-      views: 18,
-      uploadDate: "2024-01-06",
-    },
-  ]
-
-  const taskSubmissions = [
-    {
-      id: 1,
-      studentName: "Alex Johnson",
-      taskTitle: "Math Assignment 4",
-      subject: "Mathematics",
-      submittedDate: "2024-01-10",
-      status: "pending",
-    },
-    {
-      id: 2,
-      studentName: "Sarah Chen",
-      taskTitle: "Physics Lab Report",
-      subject: "Physics",
-      submittedDate: "2024-01-09",
-      status: "reviewed",
-    },
-  ]
+  const handleGradeTask = async (taskId: string, grade: number, feedback?: string) => {
+    const result = await gradeTask(taskId, grade, feedback)
+    if (result.success) {
+      // Success feedback could be added here
+      console.log("Task graded successfully")
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -146,9 +96,9 @@ function TutorDashboardContent() {
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" className="relative">
                 <Bell className="h-4 w-4" />
-                {stats.messagesUnread > 0 && (
+                {displayStats.messagesUnread > 0 && (
                   <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0">
-                    {stats.messagesUnread}
+                    {displayStats.messagesUnread}
                   </Badge>
                 )}
               </Button>
@@ -159,8 +109,8 @@ function TutorDashboardContent() {
                 <Sparkles className="h-4 w-4" />
               </Button>
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                <AvatarFallback>RF</AvatarFallback>
+                <AvatarImage src={profile?.avatar || "/placeholder.svg"} />
+                <AvatarFallback>{profile?.name?.charAt(0) || "T"}</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -170,7 +120,9 @@ function TutorDashboardContent() {
       <div className="container mx-auto px-4 py-6">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back, {tutorName}!</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Welcome back, {isLoading ? <Loader2 className="h-6 w-6 animate-spin inline" /> : tutorName}!
+          </h1>
           <p className="text-muted-foreground">Manage your students and content from your admin dashboard</p>
         </div>
 
@@ -181,7 +133,9 @@ function TutorDashboardContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Total Students</p>
-                  <p className="text-2xl font-bold text-foreground">{stats.totalStudents}</p>
+                  <p className="text-2xl font-bold text-foreground">
+                    {statsLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : displayStats.totalStudents}
+                  </p>
                 </div>
                 <Users className="h-8 w-8 text-primary" />
               </div>
@@ -193,7 +147,9 @@ function TutorDashboardContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Active Students</p>
-                  <p className="text-2xl font-bold text-foreground">{stats.activeStudents}</p>
+                  <p className="text-2xl font-bold text-foreground">
+                    {statsLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : displayStats.activeStudents}
+                  </p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-primary" />
               </div>
@@ -205,7 +161,9 @@ function TutorDashboardContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Total Videos</p>
-                  <p className="text-2xl font-bold text-foreground">{stats.totalVideos}</p>
+                  <p className="text-2xl font-bold text-foreground">
+                    {statsLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : displayStats.totalVideos}
+                  </p>
                 </div>
                 <Video className="h-8 w-8 text-primary" />
               </div>
@@ -217,7 +175,9 @@ function TutorDashboardContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Pending Approvals</p>
-                  <p className="text-2xl font-bold text-foreground">{stats.pendingApprovals}</p>
+                  <p className="text-2xl font-bold text-foreground">
+                    {statsLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : pendingStudents.length}
+                  </p>
                 </div>
                 <AlertCircle className="h-8 w-8 text-primary" />
               </div>
@@ -249,26 +209,34 @@ function TutorDashboardContent() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {recentStudents.map((student) => (
-                    <div
-                      key={student.id}
-                      className="flex items-center justify-between p-3 border border-border rounded-lg"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-foreground">{student.name}</p>
-                          <p className="text-sm text-muted-foreground">Last active: {student.lastActive}</p>
+                  {studentsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                  ) : students.length > 0 ? (
+                    students.slice(0, 3).map((student) => (
+                      <div
+                        key={student.id}
+                        className="flex items-center justify-between p-3 border border-border rounded-lg"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={student.avatar || "/placeholder.svg"} />
+                            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium text-foreground">{student.name}</p>
+                            <p className="text-sm text-muted-foreground">Last active: {student.lastActive}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <Badge variant="default">active</Badge>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">{student.progress}%</p>
-                        <Badge variant={student.status === "active" ? "default" : "secondary"}>{student.status}</Badge>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">No students found</p>
+                  )}
                 </CardContent>
               </Card>
 
@@ -281,26 +249,34 @@ function TutorDashboardContent() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {taskSubmissions.map((task) => (
-                    <div key={task.id} className="p-3 border border-border rounded-lg">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <p className="font-medium text-foreground">{task.taskTitle}</p>
-                          <p className="text-sm text-muted-foreground">by {task.studentName}</p>
-                        </div>
-                        <Badge variant={task.status === "pending" ? "destructive" : "default"}>{task.status}</Badge>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <p className="text-xs text-muted-foreground">{task.subject}</p>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-3 w-3 mr-1" />
-                            View
-                          </Button>
-                        </div>
-                      </div>
+                  {tasksLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin" />
                     </div>
-                  ))}
+                  ) : submissions.length > 0 ? (
+                    submissions.slice(0, 3).map((task) => (
+                      <div key={task.id} className="p-3 border border-border rounded-lg">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <p className="font-medium text-foreground">{task.title}</p>
+                            <p className="text-sm text-muted-foreground">by {task.studentId}</p>
+                          </div>
+                          <Badge variant={task.status === "pending" ? "destructive" : "default"}>{task.status}</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <p className="text-xs text-muted-foreground">{task.subject}</p>
+                          <div className="flex space-x-2">
+                            <Button size="sm" variant="outline">
+                              <Eye className="h-3 w-3 mr-1" />
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">No submissions found</p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -339,30 +315,30 @@ function TutorDashboardContent() {
               {/* Active Students */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Active Students ({stats.activeStudents})</CardTitle>
+                  <CardTitle>Active Students ({students.length})</CardTitle>
                   <CardDescription>Manage your enrolled students</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {recentStudents.map((student) => (
-                    <div key={student.id} className="p-4 border border-border rounded-lg">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium text-foreground">{student.name}</p>
-                            <p className="text-sm text-muted-foreground">{student.email}</p>
+                  {studentsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                  ) : students.length > 0 ? (
+                    students.map((student) => (
+                      <div key={student.id} className="p-4 border border-border rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={student.avatar || "/placeholder.svg"} />
+                              <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-foreground">{student.name}</p>
+                              <p className="text-sm text-muted-foreground">{student.email}</p>
+                            </div>
                           </div>
+                          <Badge variant="default">active</Badge>
                         </div>
-                        <Badge variant={student.status === "active" ? "default" : "secondary"}>{student.status}</Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{student.progress}%</span>
-                        </div>
-                        <Progress value={student.progress} className="h-2" />
                         <div className="flex space-x-2">
                           <Button size="sm" variant="outline" className="flex-1 bg-transparent">
                             <MessageCircle className="h-3 w-3 mr-1" />
@@ -374,8 +350,10 @@ function TutorDashboardContent() {
                           </Button>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">No active students found</p>
+                  )}
                 </CardContent>
               </Card>
 
@@ -384,35 +362,48 @@ function TutorDashboardContent() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <AlertCircle className="h-5 w-5" />
-                    <span>Pending Approvals ({stats.pendingApprovals})</span>
+                    <span>Pending Approvals ({pendingStudents.length})</span>
                   </CardTitle>
                   <CardDescription>Students waiting for approval</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {pendingStudents.map((student) => (
-                    <div key={student.id} className="p-4 border border-border rounded-lg">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <p className="font-medium text-foreground">{student.name}</p>
-                          <p className="text-sm text-muted-foreground">{student.email}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Registered: {new Date(student.registrationDate).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge variant="outline">Pending</Badge>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button size="sm" className="flex-1">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Approve
-                        </Button>
-                        <Button size="sm" variant="destructive" className="flex-1">
-                          <Trash2 className="h-3 w-3 mr-1" />
-                          Reject
-                        </Button>
-                      </div>
+                  {studentsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin" />
                     </div>
-                  ))}
+                  ) : pendingStudents.length > 0 ? (
+                    pendingStudents.map((student) => (
+                      <div key={student.id} className="p-4 border border-border rounded-lg">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="font-medium text-foreground">{student.name}</p>
+                            <p className="text-sm text-muted-foreground">{student.email}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Registered: {new Date(student.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Badge variant="outline">Pending</Badge>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" className="flex-1" onClick={() => handleApproveStudent(student.id)}>
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="flex-1"
+                            onClick={() => handleRejectStudent(student.id)}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Reject
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">No pending approvals</p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -434,39 +425,7 @@ function TutorDashboardContent() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentVideos.map((video) => (
-                    <div key={video.id} className="p-4 border border-border rounded-lg">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <p className="font-medium text-foreground">{video.title}</p>
-                          <p className="text-sm text-muted-foreground">{video.subject}</p>
-                        </div>
-                        <Badge variant="outline">{video.duration}</Badge>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex space-x-4 text-sm text-muted-foreground">
-                          <span>{video.views} views</span>
-                          <span>Uploaded: {new Date(video.uploadDate).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-3 w-3 mr-1" />
-                            Preview
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Clock className="h-3 w-3 mr-1" />
-                            Set Limits
-                          </Button>
-                          <Button size="sm" variant="destructive">
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-center text-muted-foreground py-8">Video management coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -488,34 +447,46 @@ function TutorDashboardContent() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {taskSubmissions.map((task) => (
-                    <div key={task.id} className="p-4 border border-border rounded-lg">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <p className="font-medium text-foreground">{task.taskTitle}</p>
-                          <p className="text-sm text-muted-foreground">Submitted by {task.studentName}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {task.subject} • {new Date(task.submittedDate).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge variant={task.status === "pending" ? "destructive" : "default"}>{task.status}</Badge>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button size="sm" variant="outline" className="flex-1 bg-transparent">
-                          <Eye className="h-3 w-3 mr-1" />
-                          Review
-                        </Button>
-                        <Button size="sm" className="flex-1">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Grade
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <MessageCircle className="h-3 w-3 mr-1" />
-                          Feedback
-                        </Button>
-                      </div>
+                  {tasksLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin" />
                     </div>
-                  ))}
+                  ) : [...tasks, ...submissions].length > 0 ? (
+                    [...tasks, ...submissions].map((task) => (
+                      <div key={task.id} className="p-4 border border-border rounded-lg">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="font-medium text-foreground">{task.title}</p>
+                            <p className="text-sm text-muted-foreground">Student ID: {task.studentId}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {task.subject} • {new Date(task.dueDate).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Badge variant={task.status === "pending" ? "destructive" : "default"}>{task.status}</Badge>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline" className="flex-1 bg-transparent">
+                            <Eye className="h-3 w-3 mr-1" />
+                            Review
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => handleGradeTask(task.id, 85, "Good work!")}
+                          >
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Grade
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <MessageCircle className="h-3 w-3 mr-1" />
+                            Feedback
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">No tasks found</p>
+                  )}
                 </div>
               </CardContent>
             </Card>

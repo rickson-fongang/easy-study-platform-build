@@ -14,7 +14,7 @@ export default function HomePage() {
           <div className="flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold text-foreground">EasyStudy</h1>
-            <span className="text-sm text-muted-foreground">study with ease</span>
+            <span className="text-sm text-muted-foreground"></span>
           </div>
           <div className="flex space-x-4">
             <Link href="/login">
@@ -150,13 +150,16 @@ export default function HomePage() {
       <footer className="border-t border-border bg-card py-10 px-4">
         <div className="container mx-auto text-center">
           <Image
-            src="./assets/images/Dp.jpg"
-            alt="Developer"
+            src="/images/developer-profile.jpg"
+            alt="Developer - Rickson Fongang"
             width={100}
             height={100}
             className="mx-auto rounded-full mb-4 border-4 border-primary"
           />
           <h3 className="text-xl font-semibold">Developed by Rickson Fongang</h3>
+          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+            Full-stack developer passionate about creating innovative educational solutions
+          </p>
           <div className="flex justify-center gap-6 mt-4">
             <a href="https://github.com/rickson-fongang" target="_blank" rel="noreferrer">
               <FaGithub className="text-2xl hover:text-primary transition" />
