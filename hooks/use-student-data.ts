@@ -15,6 +15,7 @@ export function useStudentProfile() {
       console.log("[v0] Fetching student profile...")
 
       const response = await studentApi.getProfile()
+      console.log("[v0] Student profile response:", response)
 
       if (response.success && response.data) {
         console.log("[v0] Profile loaded successfully:", response.data)
@@ -48,15 +49,19 @@ export function useStudentCourses() {
   const fetchCourses = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching student courses...")
       const response = await studentApi.getCourses()
+      console.log("[v0] Student courses response:", response)
 
       if (response.success && response.data) {
         setCourses(response.data)
+        setError(null)
       } else {
         setError(response.error || "Failed to load courses")
         setCourses([])
       }
     } catch (err) {
+      console.error("[v0] Courses fetch error:", err)
       setError("Failed to load courses")
       setCourses([])
     } finally {
@@ -79,15 +84,19 @@ export function useStudentActivities() {
   const fetchActivities = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching student activities...")
       const response = await studentApi.getActivities(10)
+      console.log("[v0] Student activities response:", response)
 
       if (response.success && response.data) {
         setActivities(response.data)
+        setError(null)
       } else {
         setError(response.error || "Failed to load activities")
         setActivities([])
       }
     } catch (err) {
+      console.error("[v0] Activities fetch error:", err)
       setError("Failed to load activities")
       setActivities([])
     } finally {
@@ -110,15 +119,19 @@ export function useStudentTasks() {
   const fetchTasks = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching student tasks...")
       const response = await studentApi.getTasks()
+      console.log("[v0] Student tasks response:", response)
 
       if (response.success && response.data) {
         setTasks(response.data)
+        setError(null)
       } else {
         setError(response.error || "Failed to load tasks")
         setTasks([])
       }
     } catch (err) {
+      console.error("[v0] Tasks fetch error:", err)
       setError("Failed to load tasks")
       setTasks([])
     } finally {
@@ -141,15 +154,19 @@ export function useStudentStats() {
   const fetchStats = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching student stats...")
       const response = await studentApi.getStats()
+      console.log("[v0] Student stats response:", response)
 
       if (response.success && response.data) {
         setStats(response.data)
+        setError(null)
       } else {
         setError(response.error || "Failed to load stats")
         setStats(null)
       }
     } catch (err) {
+      console.error("[v0] Stats fetch error:", err)
       setError("Failed to load stats")
       setStats(null)
     } finally {
@@ -173,12 +190,18 @@ export function useTimeRemaining() {
     async function fetchTimeRemaining() {
       try {
         setLoading(true)
+        console.log("[v0] Fetching time remaining...")
         const response = await studentApi.getTimeRemaining()
+        console.log("[v0] Time remaining response:", response)
 
         if (response.success && response.data) {
           setTimeRemaining(response.data.timeRemaining)
+          setError(null)
+        } else {
+          setError(response.error || "Failed to load time remaining")
         }
       } catch (err) {
+        console.error("[v0] Time remaining fetch error:", err)
         setError("Failed to load time remaining")
       } finally {
         setLoading(false)

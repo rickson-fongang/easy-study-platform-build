@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -10,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BookOpen, ArrowLeft, Bell, Shield, Palette, Globe, Save } from "lucide-react"
 
 export default function StudentSettings() {
+  const { theme, setTheme } = useTheme()
   const [settings, setSettings] = useState({
     // Notification Settings
     emailNotifications: true,
@@ -24,7 +26,7 @@ export default function StudentSettings() {
     allowDirectMessages: true,
 
     // Appearance Settings
-    theme: "system",
+    theme: theme || "system",
     language: "en",
     timezone: "UTC-5",
 
@@ -41,6 +43,9 @@ export default function StudentSettings() {
 
   const updateSetting = (key: string, value: any) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
+    if (key === "theme") {
+      setTheme(value)
+    }
   }
 
   return (

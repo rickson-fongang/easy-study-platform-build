@@ -11,23 +11,21 @@ export function useTutorProfile() {
   const fetchProfile = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching tutor profile...")
       const response = await tutorApi.getProfile()
+      console.log("[v0] Tutor profile response:", response)
 
       if (response.success && response.data) {
         setProfile(response.data)
+        setError(null)
       } else {
-        setProfile({
-          id: "demo-tutor",
-          name: "Rickson Fongang",
-          email: "rickson@easystudy.com",
-          role: "tutor",
-          avatar: "/placeholder.svg?height=32&width=32",
-          createdAt: new Date().toISOString(),
-          lastActive: new Date().toISOString(),
-        })
+        setError(response.error || "Failed to load profile")
+        setProfile(null)
       }
     } catch (err) {
+      console.error("[v0] Tutor profile error:", err)
       setError("Failed to load profile")
+      setProfile(null)
     } finally {
       setLoading(false)
     }
@@ -48,23 +46,21 @@ export function useTutorStats() {
   const fetchStats = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching tutor stats...")
       const response = await tutorApi.getStats()
+      console.log("[v0] Tutor stats response:", response)
 
       if (response.success && response.data) {
         setStats(response.data)
+        setError(null)
       } else {
-        setStats({
-          totalStudents: 45,
-          activeStudents: 38,
-          totalVideos: 24,
-          totalTasks: 156,
-          pendingApprovals: 7,
-          thisWeekViews: 342,
-          avgCompletionRate: 78.5,
-        })
+        setError(response.error || "Failed to load stats")
+        setStats(null)
       }
     } catch (err) {
+      console.error("[v0] Tutor stats error:", err)
       setError("Failed to load stats")
+      setStats(null)
     } finally {
       setLoading(false)
     }
@@ -86,66 +82,32 @@ export function useTutorStudents() {
   const fetchStudents = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching tutor students...")
       const [studentsResponse, pendingResponse] = await Promise.all([
         tutorApi.getStudents("active"),
         tutorApi.getPendingStudents(),
       ])
+      console.log("[v0] Students response:", studentsResponse)
+      console.log("[v0] Pending students response:", pendingResponse)
 
       if (studentsResponse.success && studentsResponse.data) {
         setStudents(studentsResponse.data)
       } else {
-        setStudents([
-          {
-            id: "1",
-            name: "Sarah Wilson",
-            email: "sarah@email.com",
-            role: "student",
-            createdAt: new Date().toISOString(),
-            lastActive: "2 hours ago",
-          },
-          {
-            id: "2",
-            name: "Mike Chen",
-            email: "mike@email.com",
-            role: "student",
-            createdAt: new Date().toISOString(),
-            lastActive: "1 day ago",
-          },
-          {
-            id: "3",
-            name: "Emma Davis",
-            email: "emma@email.com",
-            role: "student",
-            createdAt: new Date().toISOString(),
-            lastActive: "3 hours ago",
-          },
-        ])
+        setStudents([])
+        setError(studentsResponse.error || "Failed to load students")
       }
 
       if (pendingResponse.success && pendingResponse.data) {
         setPendingStudents(pendingResponse.data)
       } else {
-        setPendingStudents([
-          {
-            id: "4",
-            name: "John Smith",
-            email: "john@email.com",
-            role: "student",
-            createdAt: new Date().toISOString(),
-            lastActive: "Just now",
-          },
-          {
-            id: "5",
-            name: "Lisa Brown",
-            email: "lisa@email.com",
-            role: "student",
-            createdAt: new Date().toISOString(),
-            lastActive: "30 minutes ago",
-          },
-        ])
+        setPendingStudents([])
+        if (!error) setError(pendingResponse.error || "Failed to load pending students")
       }
     } catch (err) {
+      console.error("[v0] Tutor students error:", err)
       setError("Failed to load students")
+      setStudents([])
+      setPendingStudents([])
     } finally {
       setLoading(false)
     }
@@ -157,7 +119,10 @@ export function useTutorStudents() {
 
   const approveStudent = async (studentId: string) => {
     try {
+      console.log("[v0] Approving student:", studentId)
       const response = await tutorApi.approveStudent(studentId)
+      console.log("[v0] Approve student response:", response)
+
       if (response.success) {
         const student = pendingStudents.find((s) => s.id === studentId)
         if (student) {
@@ -167,18 +132,23 @@ export function useTutorStudents() {
       }
       return response
     } catch (err) {
+      console.error("[v0] Approve student error:", err)
       return { success: false, error: "Failed to approve student" }
     }
   }
 
   const rejectStudent = async (studentId: string) => {
     try {
+      console.log("[v0] Rejecting student:", studentId)
       const response = await tutorApi.rejectStudent(studentId)
+      console.log("[v0] Reject student response:", response)
+
       if (response.success) {
         setPendingStudents((prev) => prev.filter((s) => s.id !== studentId))
       }
       return response
     } catch (err) {
+      console.error("[v0] Reject student error:", err)
       return { success: false, error: "Failed to reject student" }
     }
   }
@@ -203,60 +173,32 @@ export function useTutorTasks() {
   const fetchTasks = useCallback(async () => {
     try {
       setLoading(true)
+      console.log("[v0] Fetching tutor tasks...")
       const [tasksResponse, submissionsResponse] = await Promise.all([
         tutorApi.getTasks(),
         tutorApi.getTaskSubmissions(),
       ])
+      console.log("[v0] Tasks response:", tasksResponse)
+      console.log("[v0] Submissions response:", submissionsResponse)
 
       if (tasksResponse.success && tasksResponse.data) {
         setTasks(tasksResponse.data)
       } else {
-        setTasks([
-          {
-            id: "1",
-            title: "Math Assignment 4",
-            description: "Complete exercises 1-10",
-            subject: "Mathematics",
-            dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "pending",
-            courseId: "1",
-            studentId: "student-1",
-            tutorId: "demo-tutor",
-          },
-          {
-            id: "2",
-            title: "Physics Lab Report",
-            description: "Write lab report for experiment 3",
-            subject: "Physics",
-            dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "in-progress",
-            courseId: "2",
-            studentId: "student-2",
-            tutorId: "demo-tutor",
-          },
-        ])
+        setTasks([])
+        setError(tasksResponse.error || "Failed to load tasks")
       }
 
       if (submissionsResponse.success && submissionsResponse.data) {
         setSubmissions(submissionsResponse.data)
       } else {
-        setSubmissions([
-          {
-            id: "3",
-            title: "Chemistry Quiz 1",
-            description: "Basic chemistry concepts",
-            subject: "Chemistry",
-            dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-            status: "completed",
-            courseId: "3",
-            studentId: "student-3",
-            tutorId: "demo-tutor",
-            submittedAt: new Date().toISOString(),
-          },
-        ])
+        setSubmissions([])
+        if (!error) setError(submissionsResponse.error || "Failed to load submissions")
       }
     } catch (err) {
+      console.error("[v0] Tutor tasks error:", err)
       setError("Failed to load tasks")
+      setTasks([])
+      setSubmissions([])
     } finally {
       setLoading(false)
     }
@@ -268,7 +210,10 @@ export function useTutorTasks() {
 
   const gradeTask = async (taskId: string, grade: number, feedback?: string) => {
     try {
+      console.log("[v0] Grading task:", taskId, grade, feedback)
       const response = await tutorApi.gradeTask(taskId, grade, feedback)
+      console.log("[v0] Grade task response:", response)
+
       if (response.success && response.data) {
         setSubmissions((prev) =>
           prev.map((task) => (task.id === taskId ? { ...task, grade, status: "completed" as const } : task)),
@@ -276,6 +221,7 @@ export function useTutorTasks() {
       }
       return response
     } catch (err) {
+      console.error("[v0] Grade task error:", err)
       return { success: false, error: "Failed to grade task" }
     }
   }
